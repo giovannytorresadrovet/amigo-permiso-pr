@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { EnhancedBusinessWizard } from '@/components/EnhancedBusinessWizard';
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
@@ -10,10 +9,11 @@ import { FeatureCards } from '@/components/FeatureCards';
 import { AdditionalFeatures } from '@/components/AdditionalFeatures';
 import { BackgroundElements } from '@/components/BackgroundElements';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
+import { KnowledgeBase } from '@/components/KnowledgeBase';
 
 const Index = () => {
   const [currentLanguage, setCurrentLanguage] = useState<'es' | 'en'>('es');
-  const [activeSection, setActiveSection] = useState<'home' | 'wizard' | 'documents' | 'ai'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'wizard' | 'documents' | 'ai' | 'knowledge'>('home');
 
   const translations = {
     es: {
@@ -93,6 +93,10 @@ const Index = () => {
 
   if (activeSection === 'ai') {
     return <PermitDiscoveryAI language={currentLanguage} onBack={() => setActiveSection('home')} />;
+  }
+
+  if (activeSection === 'knowledge') {
+    return <KnowledgeBase language={currentLanguage} onBack={() => setActiveSection('home')} />;
   }
 
   return (
