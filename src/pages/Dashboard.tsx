@@ -5,10 +5,23 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { OverviewStats } from '@/components/dashboard/OverviewStats';
 import { PermitsList } from '@/components/dashboard/PermitsList';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
+import { BusinessList } from '@/components/dashboard/BusinessList';
+import { BusinessDetails } from '@/components/dashboard/BusinessDetails';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
 const Dashboard = () => {
   const [currentView, setCurrentView] = useState('overview');
+  const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
+
+  const handleBusinessSelect = (businessId: string) => {
+    setSelectedBusinessId(businessId);
+    setCurrentView('business-details');
+  };
+
+  const handleBackToBusinesses = () => {
+    setSelectedBusinessId(null);
+    setCurrentView('businesses');
+  };
 
   const renderContent = () => {
     switch (currentView) {
@@ -22,8 +35,19 @@ const Dashboard = () => {
             </div>
           </div>
         );
+      case 'businesses':
+        return <BusinessList onBusinessSelect={handleBusinessSelect} />;
+      case 'business-details':
+        return selectedBusinessId ? (
+          <BusinessDetails 
+            businessId={selectedBusinessId} 
+            onBack={handleBackToBusinesses} 
+          />
+        ) : (
+          <BusinessList onBusinessSelect={handleBusinessSelect} />
+        );
       case 'permits':
-        return <div className="p-6 bg-white rounded-lg shadow">Permits Management - Coming Soon</div>;
+        return <div className="p-6 bg-white rounded-lg shadow">My Permits - Coming Soon</div>;
       case 'documents':
         return <div className="p-6 bg-white rounded-lg shadow">Documents - Coming Soon</div>;
       case 'profile':

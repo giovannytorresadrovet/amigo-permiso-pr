@@ -1,5 +1,5 @@
 
-import { Shield, LayoutDashboard, FileText, Upload, User, Settings, LogOut } from 'lucide-react';
+import { Shield, LayoutDashboard, FileText, Upload, User, Settings, LogOut, Building, Briefcase } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -27,8 +27,13 @@ const menuItems = [
     icon: LayoutDashboard,
   },
   {
+    id: 'businesses',
+    title: 'My Businesses',
+    icon: Building,
+  },
+  {
     id: 'permits',
-    title: 'Permits',
+    title: 'My Permits',
     icon: FileText,
   },
   {
