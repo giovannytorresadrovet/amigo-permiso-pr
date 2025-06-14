@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar as CalendarIcon, Clock, User, CheckCircle, AlertCircle, MapPin } from 'lucide-react';
-import { PermisoUnicoApplication, PermisoUnicoInspection, InspectionItem } from '@/types/permisoUnico';
+import type { PermisoUnicoApplication, PermisoUnicoInspection as PermisoUnicoInspectionType, InspectionItem } from '@/types/permisoUnico';
 
 interface PermisoUnicoInspectionProps {
   application: PermisoUnicoApplication | null;
@@ -80,7 +80,7 @@ export const PermisoUnicoInspection = ({ application, onApplicationUpdate, langu
     
     scheduledDateTime.setHours(hour, parseInt(minutes), 0, 0);
 
-    const newInspection: PermisoUnicoInspection = {
+    const newInspection: PermisoUnicoInspectionType = {
       id: crypto.randomUUID(),
       scheduledDate: scheduledDateTime,
       status: 'scheduled',
