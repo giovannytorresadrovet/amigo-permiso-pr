@@ -1,4 +1,11 @@
 
+export interface KnowledgeArticle {
+  id: string;
+  title: string;
+  category: string;
+  estimatedReadTime: number;
+}
+
 export interface Message {
   id: string;
   text: string;
