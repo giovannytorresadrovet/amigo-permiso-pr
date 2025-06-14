@@ -12,11 +12,15 @@ import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
 import { ProfileSettings } from '@/components/dashboard/ProfileSettings';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
 const Dashboard = () => {
   const [currentView, setCurrentView] = useState('overview');
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
   const [language, setLanguage] = useState<'es' | 'en'>('es');
+  
+  // Initialize notification effects
+  useNotificationEffects();
 
   const handleBusinessSelect = (businessId: string) => {
     setSelectedBusinessId(businessId);

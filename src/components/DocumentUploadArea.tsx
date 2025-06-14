@@ -8,6 +8,7 @@ import { DocumentTitle } from "./DocumentTitle";
 import { DocumentList } from "./DocumentList";
 import { DocumentActionButton } from "./DocumentActionButton";
 import { AuditLogger } from '@/lib/security';
+import { useNotifications } from '@/contexts/NotificationContext';
 
 interface DocumentUploadAreaProps {
   language: 'es' | 'en';
@@ -15,6 +16,7 @@ interface DocumentUploadAreaProps {
 }
 
 export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps) => {
+  const { addNotification } = useNotifications();
   const [documents, setDocuments] = useState<DocumentItem[]>([
     { id: '1', name: 'Certificado de Incorporación', type: 'legal', status: 'pending' },
     { id: '2', name: 'Registro de Comerciante', type: 'business', status: 'pending' },
@@ -98,6 +100,15 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
           : doc
       ));
 
+      // Notify document upload
+      addNotification({
+        type: 'info',
+        title: language === 'es' ? 'Documento Subido' : 'Document Uploaded',
+        message: language === 'es' 
+          ? `${metadata.sanitizedName} se está procesando...`
+          : `${metadata.sanitizedName} is being processed...`
+      });
+
       // Simulate AI processing with security validation
       setTimeout(() => {
         const isValid = Math.random() > 0.3;
@@ -117,6 +128,18 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
             : doc
         ));
 
+        // Notify processing result
+        addNotification({
+          type: isValid ? 'success' : 'error',
+          title: language === 'es' 
+            ? (isValid ? 'Documento Validado' : 'Documento Rechazado')
+            : (isValid ? 'Document Validated' : 'Document Rejected'),
+          message: language === 'es'
+            ? `${metadata.sanitizedName} ${isValid ? 'ha sido validado exitosamente' : 'requiere correcciones'}`
+            : `${metadata.sanitizedName} ${isValid ? 'has been validated successfully' : 'requires corrections'}`,
+          persistent: !isValid
+        });
+
         // Log processing result
         AuditLogger.log({
           action: 'document_processing_completed',
@@ -129,7 +152,7 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
         });
       }, 2000);
     }
-  }, [documents, language]);
+  }, [documents, language, addNotification]);
 
   const completedDocs = documents.filter(doc => doc.status === 'validated').length;
   const totalDocs = documents.length;
