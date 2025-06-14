@@ -2,14 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 import { getTranslation } from '@/utils/translations';
-
-interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  verified: boolean;
-}
+import { User } from '@/types/user';
 
 interface Business {
   id: string;
@@ -30,7 +23,7 @@ interface Business {
 export const usePermitoriaState = () => {
   const [user, setUser] = useState<User | null>(null);
   const [language, setLanguage] = useState<'es' | 'en'>('es');
-  const [currentView, setCurrentView] = useState<'dashboard' | 'wizard' | 'emergency'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'wizard' | 'emergency' | 'verification'>('dashboard');
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [emergencyBusiness, setEmergencyBusiness] = useState<Business | null>(null);
 
@@ -40,59 +33,79 @@ export const usePermitoriaState = () => {
   // Mock businesses data
   useEffect(() => {
     if (user) {
-      setBusinesses([
-        {
-          id: '1',
-          name: 'Café Luna',
-          legalStatus: 'legal',
-          permitType: 'Permiso Único de Negocio',
-          expirationDate: '2024-12-15',
-          completionPercentage: 100,
-          daysUntilExpiration: 45,
-          address: '123 Calle Principal, Toa Baja',
-          municipality: 'Toa Baja',
-          businessType: 'restaurant',
-          ownerName: user.firstName + ' ' + user.lastName,
-          phone: '787-555-0123',
-          permitNumber: 'TB-2024-001'
-        },
-        {
-          id: '2',
-          name: 'Salón Belleza Real',
-          legalStatus: 'expiring_soon',
-          permitType: 'Permiso de Uso + Salud',
-          expirationDate: '2024-07-22',
-          completionPercentage: 85,
-          daysUntilExpiration: 8,
-          address: '456 Ave. San José, Toa Baja',
-          municipality: 'Toa Baja',
-          businessType: 'salon',
-          ownerName: user.firstName + ' ' + user.lastName,
-          phone: '787-555-0124'
-        },
-        {
-          id: '3',
-          name: 'TechConsult PR',
-          legalStatus: 'in_process',
-          permitType: 'Permiso de Servicios Profesionales',
-          completionPercentage: 60,
-          address: '789 Urb. Las Flores, Toa Baja',
-          municipality: 'Toa Baja',
-          businessType: 'technology',
-          ownerName: user.firstName + ' ' + user.lastName,
-          phone: '787-555-0125'
-        }
-      ]);
+      // Only show businesses if user is verified
+      if (user.identityVerified && user.verificationStatus === 'verified') {
+        setBusinesses([
+          {
+            id: '1',
+            name: 'Café Luna',
+            legalStatus: 'legal',
+            permitType: 'Permiso Único de Negocio',
+            expirationDate: '2024-12-15',
+            completionPercentage: 100,
+            daysUntilExpiration: 45,
+            address: '123 Calle Principal, Toa Baja',
+            municipality: 'Toa Baja',
+            businessType: 'restaurant',
+            ownerName: user.firstName + ' ' + user.lastName,
+            phone: '787-555-0123',
+            permitNumber: 'TB-2024-001'
+          },
+          {
+            id: '2',
+            name: 'Salón Belleza Real',
+            legalStatus: 'expiring_soon',
+            permitType: 'Permiso de Uso + Salud',
+            expirationDate: '2024-07-22',
+            completionPercentage: 85,
+            daysUntilExpiration: 8,
+            address: '456 Ave. San José, Toa Baja',
+            municipality: 'Toa Baja',
+            businessType: 'salon',
+            ownerName: user.firstName + ' ' + user.lastName,
+            phone: '787-555-0124'
+          },
+          {
+            id: '3',
+            name: 'TechConsult PR',
+            legalStatus: 'in_process',
+            permitType: 'Permiso de Servicios Profesionales',
+            completionPercentage: 60,
+            address: '789 Urb. Las Flores, Toa Baja',
+            municipality: 'Toa Baja',
+            businessType: 'technology',
+            ownerName: user.firstName + ' ' + user.lastName,
+            phone: '787-555-0125'
+          }
+        ]);
+      } else {
+        // Clear businesses if user is not verified
+        setBusinesses([]);
+      }
     }
   }, [user]);
 
-  const handleAuthSuccess = (authenticatedUser: User) => {
-    setUser(authenticatedUser);
+  const handleAuthSuccess = (authenticatedUser: any) => {
+    // Convert to new User type with verification fields
+    const newUser: User = {
+      id: authenticatedUser.id,
+      email: authenticatedUser.email,
+      firstName: authenticatedUser.firstName,
+      lastName: authenticatedUser.lastName,
+      verified: authenticatedUser.verified || false,
+      identityVerified: false, // Start with no identity verification
+      role: 'guest', // Start as guest
+      verificationStatus: 'pending',
+      createdAt: new Date(),
+      lastLogin: new Date()
+    };
+
+    setUser(newUser);
     notifySuccess(
       t('loginSuccessful'),
       language === 'es' 
-        ? `¡Bienvenido ${authenticatedUser.firstName}! Tu cuenta está verificada.`
-        : `Welcome ${authenticatedUser.firstName}! Your account is verified.`,
+        ? `¡Bienvenido ${authenticatedUser.firstName}! Para crear negocios, necesitas verificar tu identidad.`
+        : `Welcome ${authenticatedUser.firstName}! To create businesses, you need to verify your identity.`,
       false
     );
   };

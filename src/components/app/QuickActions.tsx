@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
-import { Plus, Shield, FileText, Settings } from 'lucide-react';
+import { Plus, Shield, FileText, Settings, Lock } from 'lucide-react';
+import { useUserManagement } from '@/contexts/UserManagementContext';
 
 interface QuickActionsProps {
   language: 'es' | 'en';
@@ -15,15 +16,38 @@ export const QuickActions = ({
   onEmergencyMode, 
   hasBusinesses 
 }: QuickActionsProps) => {
+  const { businessCreationAccess } = useUserManagement();
+
+  const handleNewBusinessClick = () => {
+    if (businessCreationAccess.hasAccess) {
+      onNewBusiness();
+    } else {
+      // This will trigger the verification prompt in the wizard guard
+      onNewBusiness();
+    }
+  };
+
   return (
     <div className="grid md:grid-cols-4 gap-4 mb-8">
       <Button 
-        onClick={onNewBusiness}
-        className="h-20 bg-blue-600 hover:bg-blue-700"
+        onClick={handleNewBusinessClick}
+        className={`h-20 ${businessCreationAccess.hasAccess ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 hover:bg-gray-500'}`}
+        title={!businessCreationAccess.hasAccess ? (language === 'es' ? 'Verificación requerida' : 'Verification required') : undefined}
       >
         <div className="text-center">
-          <Plus className="w-6 h-6 mx-auto mb-1" />
-          <span className="text-sm">{language === 'es' ? 'Nuevo Negocio' : 'New Business'}</span>
+          {businessCreationAccess.hasAccess ? (
+            <Plus className="w-6 h-6 mx-auto mb-1" />
+          ) : (
+            <Lock className="w-6 h-6 mx-auto mb-1" />
+          )}
+          <span className="text-sm">
+            {language === 'es' ? 'Nuevo Negocio' : 'New Business'}
+          </span>
+          {!businessCreationAccess.hasAccess && (
+            <div className="text-xs opacity-75">
+              {language === 'es' ? 'Verificación requerida' : 'Verification required'}
+            </div>
+          )}
         </div>
       </Button>
       
