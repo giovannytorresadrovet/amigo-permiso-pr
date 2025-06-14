@@ -4,8 +4,8 @@ export const translations = {
     // Authentication
     welcomeBack: 'Bienvenido de Vuelta',
     createAccount: 'Crear Cuenta',
-    signInToAccount: 'Inicia sesión en tu cuenta de PermitPR',
-    joinPermitPR: 'Únete a PermitPR para comenzar',
+    signInToAccount: 'Inicia sesión en tu cuenta de Permisoria',
+    joinPermitPR: 'Únete a Permisoria para comenzar',
     email: 'Correo Electrónico',
     password: 'Contraseña',
     confirmPassword: 'Confirmar Contraseña',
@@ -160,8 +160,8 @@ export const translations = {
     // Authentication
     welcomeBack: 'Welcome Back',
     createAccount: 'Create Account',
-    signInToAccount: 'Sign in to your PermitPR account',
-    joinPermitPR: 'Join PermitPR to get started',
+    signInToAccount: 'Sign in to your Permisoria account',
+    joinPermitPR: 'Join Permisoria to get started',
     email: 'Email',
     password: 'Password',
     confirmPassword: 'Confirm Password',

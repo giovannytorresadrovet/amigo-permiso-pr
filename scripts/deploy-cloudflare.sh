@@ -1,11 +1,11 @@
 
 #!/bin/bash
 
-# Cloudflare Pages Deployment Script for PermitPR
+# Cloudflare Pages Deployment Script for Permisoria
 
 set -e
 
-echo "🚀 Starting Cloudflare Pages deployment for PermitPR..."
+echo "🚀 Starting Cloudflare Pages deployment for Permisoria..."
 
 # Check if wrangler is installed
 if ! command -v wrangler &> /dev/null; then
@@ -30,29 +30,29 @@ echo "🌐 Deploying to Cloudflare Pages..."
 
 if [ "$1" = "production" ]; then
     echo "🎯 Deploying to PRODUCTION environment..."
-    wrangler pages deploy dist --project-name permitpr --env production
+    wrangler pages deploy dist --project-name permisoria --env production
 elif [ "$1" = "staging" ]; then
     echo "🧪 Deploying to STAGING environment..."
-    wrangler pages deploy dist --project-name permitpr --env staging
+    wrangler pages deploy dist --project-name permisoria --env staging
 else
     echo "🔍 Deploying to PREVIEW environment..."
-    wrangler pages deploy dist --project-name permitpr
+    wrangler pages deploy dist --project-name permisoria
 fi
 
 echo "✅ Deployment completed successfully!"
 echo "🔗 Your app should be available at:"
 
 if [ "$1" = "production" ]; then
-    echo "   https://permitpr.com"
+    echo "   https://permisoria.com"
 elif [ "$1" = "staging" ]; then
-    echo "   https://staging.permitpr.com"
+    echo "   https://staging.permisoria.com"
 else
     echo "   Check the deployment URL in the output above"
 fi
 
 echo ""
 echo "📊 To monitor your deployment:"
-echo "   wrangler pages deployment list --project-name permitpr"
+echo "   wrangler pages deployment list --project-name permisoria"
 echo ""
 echo "🔧 To view logs:"
-echo "   wrangler pages deployment tail --project-name permitpr"
+echo "   wrangler pages deployment tail --project-name permisoria"

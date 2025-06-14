@@ -73,7 +73,7 @@ export const DashboardSidebar = ({ currentView, onViewChange, language, onLangua
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
-            <span className="text-lg font-bold text-slate-800">PermitPR</span>
+            <span className="text-lg font-bold text-slate-800">Permisoria</span>
           </div>
           <Button 
             variant="ghost" 

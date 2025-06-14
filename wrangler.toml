@@ -1,19 +1,19 @@
 
-name = "permitpr"
+name = "permisoria"
 compatibility_date = "2024-06-14"
 compatibility_flags = ["nodejs_compat"]
 
 [env.production]
-name = "permitpr"
+name = "permisoria"
 routes = [
-  { pattern = "permitpr.com/*", zone_name = "permitpr.com" },
-  { pattern = "www.permitpr.com/*", zone_name = "permitpr.com" }
+  { pattern = "permisoria.com/*", zone_name = "permisoria.com" },
+  { pattern = "www.permisoria.com/*", zone_name = "permisoria.com" }
 ]
 
 [env.staging]
-name = "permitpr-staging"
+name = "permisoria-staging"
 routes = [
-  { pattern = "staging.permitpr.com/*", zone_name = "permitpr.com" }
+  { pattern = "staging.permisoria.com/*", zone_name = "permisoria.com" }
 ]
 
 # Build configuration
@@ -41,4 +41,4 @@ preview_id = "your-preview-kv-namespace-id"
 # Environment variables
 [vars]
 ENVIRONMENT = "production"
-APP_NAME = "PermitPR"
+APP_NAME = "Permisoria"

@@ -3,7 +3,7 @@
 export const cloudflareConfig = {
   // Pages configuration
   pages: {
-    projectName: import.meta.env.VITE_CLOUDFLARE_PROJECT_NAME || 'permitpr',
+    projectName: import.meta.env.VITE_CLOUDFLARE_PROJECT_NAME || 'permisoria',
     environment: import.meta.env.VITE_ENVIRONMENT || 'production',
     buildCommand: 'npm run build',
     buildOutputDirectory: 'dist',

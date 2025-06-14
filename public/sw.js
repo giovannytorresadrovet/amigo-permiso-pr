@@ -1,8 +1,9 @@
-// Service Worker for Cloudflare + PermitPR Integration
 
-const CACHE_NAME = 'permitpr-v1';
-const STATIC_CACHE = 'permitpr-static-v1';
-const API_CACHE = 'permitpr-api-v1';
+// Service Worker for Cloudflare + Permisoria Integration
+
+const CACHE_NAME = 'permisoria-v1';
+const STATIC_CACHE = 'permisoria-static-v1';
+const API_CACHE = 'permisoria-api-v1';
 
 // Assets to cache immediately
 const STATIC_ASSETS = [

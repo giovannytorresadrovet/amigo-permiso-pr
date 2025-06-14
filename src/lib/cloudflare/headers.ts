@@ -47,7 +47,7 @@ export const getCloudflareSecurityHeaders = () => ({
   'Report-To': JSON.stringify({
     group: 'default',
     max_age: 10886400,
-    endpoints: [{ url: 'https://reports.permitpr.com/csp' }]
+    endpoints: [{ url: 'https://reports.permisoria.com/csp' }]
   }),
 
   // Cross-Origin policies
