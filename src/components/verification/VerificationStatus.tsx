@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,7 @@ import {
   AlertTriangle,
   RefreshCw 
 } from 'lucide-react';
-import { useUserManagement } from '@/contexts/UserManagementContext';
+import { useUserManagement } from '@/contexts/UserManagement';
 
 interface VerificationStatusProps {
   language: 'es' | 'en';

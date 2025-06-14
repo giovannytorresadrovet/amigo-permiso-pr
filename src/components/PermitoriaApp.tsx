@@ -8,7 +8,7 @@ import { QuickActions } from './app/QuickActions';
 import { BusinessesSection } from './app/BusinessesSection';
 import { usePermitoriaState } from '@/hooks/usePermitoriaState';
 import { UserContextProvider } from '@/contexts/UserContextProvider';
-import { UserManagementProvider } from '@/contexts/UserManagementContext';
+import { UserManagementProvider } from '@/contexts/UserManagement';
 import { ComplianceProvider } from './compliance/ComplianceProvider';
 import { SecureGerryAIAssistant } from './ai/SecureGerryAIAssistant';
 import { BusinessCreationGuard } from './business/BusinessCreationGuard';

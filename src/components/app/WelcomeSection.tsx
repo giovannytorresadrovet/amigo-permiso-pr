@@ -1,8 +1,7 @@
-
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Shield, ShieldCheck, ExternalLink } from 'lucide-react';
-import { useUserManagement } from '@/contexts/UserManagementContext';
+import { useUserManagement } from '@/contexts/UserManagement';
 
 interface User {
   firstName: string;

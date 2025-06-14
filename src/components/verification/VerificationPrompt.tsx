@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Shield, CheckCircle, AlertTriangle, ExternalLink } from 'lucide-react';
-import { useUserManagement } from '@/contexts/UserManagementContext';
+import { useUserManagement } from '@/contexts/UserManagement';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
 interface VerificationPromptProps {

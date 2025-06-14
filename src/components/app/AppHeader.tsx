@@ -1,8 +1,7 @@
-
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Bell, LogOut, ShieldCheck, Shield, AlertTriangle } from 'lucide-react';
-import { useUserManagement } from '@/contexts/UserManagementContext';
+import { useUserManagement } from '@/contexts/UserManagement';
 
 interface User {
   id: string;

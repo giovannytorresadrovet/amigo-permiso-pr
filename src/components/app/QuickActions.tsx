@@ -1,7 +1,6 @@
-
 import { Button } from '@/components/ui/button';
 import { Plus, Shield, FileText, Settings, Lock } from 'lucide-react';
-import { useUserManagement } from '@/contexts/UserManagementContext';
+import { useUserManagement } from '@/contexts/UserManagement';
 
 interface QuickActionsProps {
   language: 'es' | 'en';

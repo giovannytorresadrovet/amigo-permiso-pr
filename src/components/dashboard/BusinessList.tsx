@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { BusinessListHeader } from './BusinessListHeader';
 import { BusinessGrid } from './BusinessGrid';
@@ -7,7 +6,7 @@ import { NewBusinessModal } from '@/components/modals/NewBusinessModal';
 import { BusinessCreationGuard } from '@/components/business/BusinessCreationGuard';
 import { useBusinessFilter } from '@/hooks/useBusinessFilter';
 import { mockBusinesses } from '@/data/mockBusinesses';
-import { useUserManagement } from '@/contexts/UserManagementContext';
+import { useUserManagement } from '@/contexts/UserManagement';
 
 interface BusinessListProps {
   onBusinessSelect: (businessId: string) => void;

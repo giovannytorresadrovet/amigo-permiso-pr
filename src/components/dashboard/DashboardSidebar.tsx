@@ -1,4 +1,3 @@
-
 import { Shield, LayoutDashboard, FileText, Upload, User, Settings, LogOut, Building, Briefcase, Brain, Globe, ShieldCheck, AlertTriangle } from 'lucide-react';
 import {
   Sidebar,
@@ -15,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useUserManagement } from '@/contexts/UserManagementContext';
+import { useUserManagement } from '@/contexts/UserManagement';
 
 interface DashboardSidebarProps {
   currentView: string;

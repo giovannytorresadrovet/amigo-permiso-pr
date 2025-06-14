@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Shield, Lock, AlertTriangle } from 'lucide-react';
-import { useUserManagement } from '@/contexts/UserManagementContext';
+import { useUserManagement } from '@/contexts/UserManagement';
 import { VerificationPrompt } from '@/components/verification/VerificationPrompt';
 
 interface BusinessCreationGuardProps {
