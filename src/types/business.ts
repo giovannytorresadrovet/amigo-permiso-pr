@@ -3,17 +3,27 @@ export interface Business {
   id: string;
   name: string;
   type: string;
+  typeLabel?: string;
   description: string;
   location: string;
+  address?: string;
+  municipality?: string;
+  zipCode?: string;
   employees: number;
   established: string;
-  status: 'Active' | 'Pending' | 'Inactive';
+  status: 'Active' | 'Pending' | 'Inactive' | 'active' | 'pending' | 'inactive';
   permitCount: number;
   phone: string;
   email: string;
-  website: string;
+  website?: string;
   owner: string;
   taxId: string;
+  lastUpdate?: string;
+  socialProvider?: string;
+  revenue?: number;
+  employeeCount?: number;
+  nextRenewal?: string;
+  complianceScore?: number;
   permits: Array<{
     name: string;
     status: string;
@@ -55,4 +65,27 @@ export interface Business {
     saturday?: { open: string; close: string };
     sunday?: { open: string; close: string };
   };
+}
+
+// Simplified interface for list views
+export interface BusinessSummary {
+  id: string;
+  name: string;
+  type: string;
+  typeLabel: string;
+  status: string;
+  permitCount: number;
+  complianceScore?: number;
+  lastUpdate: string;
+}
+
+// Interface for business creation
+export interface BusinessFormData {
+  name: string;
+  businessType: string;
+  description: string;
+  address: any;
+  employees: string;
+  revenue: string;
+  zoningInfo?: any;
 }
