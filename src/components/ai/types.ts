@@ -19,6 +19,7 @@ export interface Message {
 export interface GerryAIAssistantProps {
   language: 'es' | 'en';
   businessContext?: {
+    businessId: string;
     name: string;
     type: string;
     municipality: string;
