@@ -7,9 +7,11 @@ export class VerificationService {
     const session: VerificationSession = {
       id: `session_${Date.now()}`,
       userId: user.id,
+      type: 'identity_verification',
       provider: 'id_me',
       status: 'initiated',
-      createdAt: new Date()
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
     };
 
     // Simulate ID.me redirect URL generation

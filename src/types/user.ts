@@ -30,9 +30,12 @@ export interface User {
   role: string;
   verified: boolean;
   identityVerified: boolean;
-  verificationStatus: string;
+  verificationStatus: 'pending' | 'in_progress' | 'verified' | 'failed';
+  verificationDate?: Date;
+  idMeVerificationId?: string;
   preferredLanguage: string;
   createdAt: Date;
+  lastLogin?: Date;
 }
 
 export interface VerificationSession {
@@ -40,12 +43,19 @@ export interface VerificationSession {
   userId: string;
   type: string;
   status: string;
+  provider?: string;
+  redirectUrl?: string;
+  completedAt?: Date;
+  errorMessage?: string;
+  verificationData?: any;
   createdAt: Date;
   expiresAt: Date;
 }
 
 export interface BusinessCreationAccess {
   allowed: boolean;
+  hasAccess: boolean;
+  requiresVerification: boolean;
   reason?: string;
   requiredVerifications?: string[];
 }

@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -68,8 +69,8 @@ export const VerificationStatus = ({ language, showActions = true }: Verificatio
     switch (user.verificationStatus) {
       case 'verified':
         return language === 'es' 
-          ? `Identidad verificada el ${user.verificationDate?.toLocaleDateString()}`
-          : `Identity verified on ${user.verificationDate?.toLocaleDateString()}`;
+          ? `Identidad verificada${user.verificationDate ? ` el ${user.verificationDate.toLocaleDateString()}` : ''}`
+          : `Identity verified${user.verificationDate ? ` on ${user.verificationDate.toLocaleDateString()}` : ''}`;
       case 'failed':
         return language === 'es' 
           ? 'La verificación de identidad falló. Inténtalo de nuevo.'

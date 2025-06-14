@@ -5,6 +5,7 @@ export class BusinessAccessChecker {
   static checkAccess(user: User | null): BusinessCreationAccess {
     if (!user) {
       return {
+        allowed: false,
         hasAccess: false,
         reason: 'not_verified',
         requiresVerification: true
@@ -13,6 +14,7 @@ export class BusinessAccessChecker {
 
     if (!user.identityVerified) {
       return {
+        allowed: false,
         hasAccess: false,
         reason: 'not_verified',
         requiresVerification: true
@@ -21,6 +23,7 @@ export class BusinessAccessChecker {
 
     if (user.verificationStatus === 'failed') {
       return {
+        allowed: false,
         hasAccess: false,
         reason: 'verification_failed',
         requiresVerification: true
@@ -28,6 +31,7 @@ export class BusinessAccessChecker {
     }
 
     return {
+      allowed: true,
       hasAccess: true,
       requiresVerification: false
     };

@@ -29,7 +29,7 @@ export const ModuleStore = ({ language, onModuleInstall }: ModuleStoreProps) => 
         language={language}
       />
 
-      <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
+      <Tabs value={selectedCategory} onValueChange={(value) => setSelectedCategory(value as any)}>
         <ModuleStoreFilters
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
