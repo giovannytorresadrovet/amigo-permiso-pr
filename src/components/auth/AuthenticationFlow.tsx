@@ -184,7 +184,7 @@ export const AuthenticationFlow = ({ onAuthSuccess, language, onLanguageChange }
         {/* Header with Language Toggle */}
         <div className="flex justify-between items-center">
           <div className="text-2xl font-bold text-white">Permisoria</div>
-          <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
+          <LanguageToggle currentLanguage={language} onChange={onLanguageChange} />
         </div>
 
         <Card className="bg-slate-800/50 border-slate-700">
