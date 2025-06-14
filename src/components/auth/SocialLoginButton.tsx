@@ -1,11 +1,13 @@
 
 import { Button } from '@/components/ui/button';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
+import { getTranslation } from '@/utils/translations';
 
 interface SocialLoginButtonProps {
   provider: 'google' | 'facebook' | 'apple';
   mode: 'login' | 'signup';
   disabled?: boolean;
+  language?: 'es' | 'en';
 }
 
 const providerConfig = {
@@ -47,9 +49,16 @@ const providerConfig = {
   }
 };
 
-export const SocialLoginButton = ({ provider, mode, disabled }: SocialLoginButtonProps) => {
+export const SocialLoginButton = ({ 
+  provider, 
+  mode, 
+  disabled, 
+  language = 'es' 
+}: SocialLoginButtonProps) => {
   const { notifySuccess, notifyError } = useNotificationEffects();
   const config = providerConfig[provider];
+
+  const t = (key: string) => getTranslation(key, language);
 
   const handleSocialLogin = async () => {
     console.log(`Mock ${provider} ${mode} attempt`);
@@ -62,27 +71,50 @@ export const SocialLoginButton = ({ provider, mode, disabled }: SocialLoginButto
       const success = Math.random() > 0.1;
       
       if (success) {
-        const userName = provider === 'google' ? 'Juan Pérez' : provider === 'facebook' ? 'María González' : 'Carlos Rivera';
+        // Puerto Rico specific mock names
+        const mockNames = {
+          google: language === 'es' ? 'Juan Pérez González' : 'Juan Pérez González',
+          facebook: language === 'es' ? 'María Rivera Torres' : 'María Rivera Torres', 
+          apple: language === 'es' ? 'Carlos Martínez Díaz' : 'Carlos Martínez Díaz'
+        };
+        
+        const userName = mockNames[provider];
+        const successMessage = language === 'es' 
+          ? `¡Bienvenido ${userName}! Has iniciado sesión con ${config.name}.`
+          : `Welcome ${userName}! You have signed in with ${config.name}.`;
+          
         notifySuccess(
-          `${mode === 'login' ? 'Login' : 'Registro'} exitoso`,
-          `Bienvenido ${userName}! Has iniciado sesión con ${config.name}.`,
+          t(mode === 'login' ? 'loginSuccessful' : 'registrationSuccessful'),
+          successMessage,
           false
         );
       } else {
+        const errorMessage = language === 'es'
+          ? `No se pudo completar el ${mode === 'login' ? 'inicio de sesión' : 'registro'} con ${config.name}. Inténtalo de nuevo.`
+          : `Could not complete ${mode === 'login' ? 'login' : 'registration'} with ${config.name}. Please try again.`;
+          
         notifyError(
           `Error con ${config.name}`,
-          `No se pudo completar el ${mode === 'login' ? 'login' : 'registro'} con ${config.name}. Inténtalo de nuevo.`,
+          errorMessage,
           true
         );
       }
     } catch (error) {
+      const errorMessage = language === 'es'
+        ? 'Hubo un problema al conectar con el proveedor. Inténtalo más tarde.'
+        : 'There was a problem connecting with the provider. Please try again later.';
+        
       notifyError(
-        'Error de conexión',
-        'Hubo un problema al conectar con el proveedor. Inténtalo más tarde.',
+        language === 'es' ? 'Error de conexión' : 'Connection Error',
+        errorMessage,
         true
       );
     }
   };
+
+  const buttonText = language === 'es' 
+    ? `${mode === 'login' ? 'Continuar' : 'Registrarse'} con ${config.name}`
+    : `${mode === 'login' ? 'Continue' : 'Register'} with ${config.name}`;
 
   return (
     <Button
@@ -93,9 +125,7 @@ export const SocialLoginButton = ({ provider, mode, disabled }: SocialLoginButto
       className={`w-full ${config.bgColor} ${config.textColor} border ${config.borderColor} flex items-center justify-center space-x-2`}
     >
       {config.icon}
-      <span>
-        {mode === 'login' ? 'Continuar' : 'Registrarse'} con {config.name}
-      </span>
+      <span>{buttonText}</span>
     </Button>
   );
 };
