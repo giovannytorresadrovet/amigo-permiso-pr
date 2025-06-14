@@ -2,7 +2,7 @@
 import { Sidebar, SidebarContent } from '@/components/ui/sidebar';
 import { useUserManagement } from '@/contexts/UserManagement';
 import { SidebarHeader } from './SidebarHeader';
-import { VerificationStatus } from './VerificationStatus';
+import { VerificationStatus } from '@/components/verification/VerificationStatus';
 import { SidebarMenuItems } from './SidebarMenuItems';
 import { VerificationAlert } from './VerificationAlert';
 import { SidebarFooter } from './SidebarFooter';
