@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { EnhancedBusinessWizard } from '@/components/EnhancedBusinessWizard';
+import { EnhancedPermitDiscoveryWizard } from '@/components/EnhancedPermitDiscoveryWizard';
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
 import { LandingHeader } from '@/components/app/LandingHeader';
@@ -10,10 +11,12 @@ import { AdditionalFeatures } from '@/components/AdditionalFeatures';
 import { BackgroundElements } from '@/components/BackgroundElements';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { KnowledgeBase } from '@/components/KnowledgeBase';
+import type { PermitDiscoveryResult } from '@/services/permitDiscoveryEngine';
 
 const Index = () => {
   const [currentLanguage, setCurrentLanguage] = useState<'es' | 'en'>('es');
-  const [activeSection, setActiveSection] = useState<'home' | 'wizard' | 'documents' | 'ai' | 'knowledge'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'wizard' | 'documents' | 'ai' | 'knowledge' | 'results'>('home');
+  const [discoveryResults, setDiscoveryResults] = useState<PermitDiscoveryResult | null>(null);
 
   const translations = {
     es: {
@@ -72,14 +75,19 @@ const Index = () => {
 
   const t = translations[currentLanguage];
 
-  const handleWizardComplete = (businessData: any) => {
-    console.log('Business setup completed:', businessData);
+  const handleWizardComplete = (result: PermitDiscoveryResult) => {
+    setDiscoveryResults(result);
+    setActiveSection('results');
+  };
+
+  const handleResultsBack = () => {
     setActiveSection('home');
+    setDiscoveryResults(null);
   };
 
   if (activeSection === 'wizard') {
     return (
-      <EnhancedBusinessWizard 
+      <EnhancedPermitDiscoveryWizard 
         language={currentLanguage} 
         onComplete={handleWizardComplete}
         onBack={() => setActiveSection('home')} 
@@ -97,6 +105,110 @@ const Index = () => {
 
   if (activeSection === 'knowledge') {
     return <KnowledgeBase language={currentLanguage} onBack={() => setActiveSection('home')} />;
+  }
+
+  if (activeSection === 'results' && discoveryResults) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <button 
+              onClick={handleResultsBack}
+              className="text-slate-300 hover:text-white flex items-center space-x-2"
+            >
+              <span>←</span>
+              <span>{currentLanguage === 'es' ? 'Regresar' : 'Back'}</span>
+            </button>
+          </div>
+          
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              {currentLanguage === 'es' ? 'Plan de Permisos Personalizado' : 'Personalized Permit Plan'}
+            </h1>
+            <p className="text-lg text-slate-400">
+              {currentLanguage === 'es' 
+                ? 'Tu hoja de ruta completa para el cumplimiento legal'
+                : 'Your complete roadmap to legal compliance'
+              }
+            </p>
+          </div>
+
+          {/* Display detailed results */}
+          <div className="grid gap-8">
+            {/* Required Permits */}
+            <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+              <h2 className="text-xl font-bold text-white mb-4">
+                {currentLanguage === 'es' ? 'Permisos Requeridos' : 'Required Permits'}
+              </h2>
+              <div className="grid gap-4">
+                {discoveryResults.requiredPermits.map((permit, index) => (
+                  <div key={index} className="p-4 bg-slate-700/50 rounded-lg border border-slate-600">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold text-white">{permit.name}</h3>
+                      <span className={`px-2 py-1 text-xs rounded ${
+                        permit.priority === 'critical' ? 'bg-red-500/20 text-red-300' :
+                        permit.priority === 'high' ? 'bg-yellow-500/20 text-yellow-300' :
+                        'bg-blue-500/20 text-blue-300'
+                      }`}>
+                        {permit.priority}
+                      </span>
+                    </div>
+                    <p className="text-slate-300 text-sm mb-2">{permit.description}</p>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-slate-400">
+                      <div>
+                        <strong>{currentLanguage === 'es' ? 'Costo:' : 'Cost:'}</strong> {permit.estimatedCost}
+                      </div>
+                      <div>
+                        <strong>{currentLanguage === 'es' ? 'Tiempo:' : 'Time:'}</strong> {permit.processingTime}
+                      </div>
+                      <div>
+                        <strong>{currentLanguage === 'es' ? 'Agencia:' : 'Agency:'}</strong> {permit.agency}
+                      </div>
+                      <div>
+                        <strong>{currentLanguage === 'es' ? 'Inspección:' : 'Inspection:'}</strong> {permit.inspectionRequired ? 'Sí' : 'No'}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Timeline and Costs */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h2 className="text-xl font-bold text-white mb-4">
+                  {currentLanguage === 'es' ? 'Cronograma' : 'Timeline'}
+                </h2>
+                <div className="text-3xl font-bold text-blue-400 mb-2">
+                  {discoveryResults.estimatedTimeline}
+                </div>
+                <p className="text-slate-400">
+                  {currentLanguage === 'es' 
+                    ? 'Tiempo estimado desde inicio hasta completar todos los permisos'
+                    : 'Estimated time from start to completing all permits'
+                  }
+                </p>
+              </div>
+
+              <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
+                <h2 className="text-xl font-bold text-white mb-4">
+                  {currentLanguage === 'es' ? 'Costo Total' : 'Total Cost'}
+                </h2>
+                <div className="text-3xl font-bold text-green-400 mb-2">
+                  {discoveryResults.estimatedCost}
+                </div>
+                <p className="text-slate-400">
+                  {currentLanguage === 'es' 
+                    ? 'Tarifas gubernamentales estimadas'
+                    : 'Estimated government fees'
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
