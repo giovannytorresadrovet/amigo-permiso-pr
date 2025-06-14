@@ -123,9 +123,17 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
     try {
       await saveBusiness({
         name: businessData.name,
-        address: businessData.address,
+        address: businessData.address || {
+          street: '',
+          city: '',
+          state: 'PR',
+          zipCode: '',
+          municipality: ''
+        },
         businessType: businessData.businessType,
-        permitStatus: 'pending'
+        permitStatus: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date()
       });
       onComplete(businessData);
     } catch (error) {
