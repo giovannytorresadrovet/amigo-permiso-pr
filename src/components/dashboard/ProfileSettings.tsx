@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,13 +7,30 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Mail, Phone, Bell, Shield, Globe, Save, ArrowLeft } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { User, Mail, Phone, Bell, Shield, Globe, Save, ArrowLeft, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ProfileSettingsProps {
   onBack?: () => void;
 }
+
+const municipalities = [
+  'Adjuntas', 'Aguada', 'Aguadilla', 'Aguas Buenas', 'Aibonito', 'Arecibo',
+  'Arroyo', 'Barceloneta', 'Barranquitas', 'Bayamón', 'Cabo Rojo', 'Caguas',
+  'Camuy', 'Canóvanas', 'Carolina', 'Cataño', 'Cayey', 'Ceiba', 'Cidra',
+  'Coamo', 'Comerío', 'Corozal', 'Culebra', 'Dorado', 'Fajardo', 'Florida',
+  'Guánica', 'Guayama', 'Guayanilla', 'Guaynabo', 'Gurabo', 'Hatillo',
+  'Hormigueros', 'Humacao', 'Isabela', 'Jayuya', 'Juana Díaz', 'Juncos',
+  'Lajas', 'Lares', 'Las Marías', 'Las Piedras', 'Loíza', 'Luquillo',
+  'Manatí', 'Maricao', 'Maunabo', 'Mayagüez', 'Moca', 'Morovis',
+  'Naguabo', 'Naranjito', 'Orocovis', 'Patillas', 'Peñuelas', 'Ponce',
+  'Quebradillas', 'Rincón', 'Río Grande', 'Sabana Grande', 'Salinas',
+  'San Germán', 'San Juan', 'San Lorenzo', 'San Sebastián', 'Santa Isabel',
+  'Toa Alta', 'Toa Baja', 'Trujillo Alto', 'Utuado', 'Vega Alta', 'Vega Baja',
+  'Vieques', 'Villalba', 'Yabucoa', 'Yauco'
+];
 
 export const ProfileSettings = ({ onBack }: ProfileSettingsProps) => {
   const [profile, setProfile] = useState({
@@ -23,6 +39,7 @@ export const ProfileSettings = ({ onBack }: ProfileSettingsProps) => {
     email: 'john.doe@example.com',
     phone: '+1 (787) 555-0123',
     company: 'TechFlow Solutions',
+    municipality: 'San Juan',
     bio: 'Experienced business owner focused on technology solutions in Puerto Rico.',
   });
 
@@ -147,6 +164,28 @@ export const ProfileSettings = ({ onBack }: ProfileSettingsProps) => {
                   onChange={(e) => handleProfileChange('phone', e.target.value)}
                   className="flex-1"
                 />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="municipality">Municipio</Label>
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-4 h-4 text-slate-400" />
+                <Select 
+                  onValueChange={(value) => handleProfileChange('municipality', value)}
+                  defaultValue={profile.municipality}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Selecciona tu municipio" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-slate-300 shadow-lg z-50 max-h-60">
+                    {municipalities.map((municipality) => (
+                      <SelectItem key={municipality} value={municipality} className="hover:bg-slate-100">
+                        {municipality}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

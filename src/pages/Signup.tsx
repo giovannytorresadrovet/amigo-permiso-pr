@@ -9,12 +9,30 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
+
+const municipalities = [
+  'Adjuntas', 'Aguada', 'Aguadilla', 'Aguas Buenas', 'Aibonito', 'Arecibo',
+  'Arroyo', 'Barceloneta', 'Barranquitas', 'Bayamón', 'Cabo Rojo', 'Caguas',
+  'Camuy', 'Canóvanas', 'Carolina', 'Cataño', 'Cayey', 'Ceiba', 'Cidra',
+  'Coamo', 'Comerío', 'Corozal', 'Culebra', 'Dorado', 'Fajardo', 'Florida',
+  'Guánica', 'Guayama', 'Guayanilla', 'Guaynabo', 'Gurabo', 'Hatillo',
+  'Hormigueros', 'Humacao', 'Isabela', 'Jayuya', 'Juana Díaz', 'Juncos',
+  'Lajas', 'Lares', 'Las Marías', 'Las Piedras', 'Loíza', 'Luquillo',
+  'Manatí', 'Maricao', 'Maunabo', 'Mayagüez', 'Moca', 'Morovis',
+  'Naguabo', 'Naranjito', 'Orocovis', 'Patillas', 'Peñuelas', 'Ponce',
+  'Quebradillas', 'Rincón', 'Río Grande', 'Sabana Grande', 'Salinas',
+  'San Germán', 'San Juan', 'San Lorenzo', 'San Sebastián', 'Santa Isabel',
+  'Toa Alta', 'Toa Baja', 'Trujillo Alto', 'Utuado', 'Vega Alta', 'Vega Baja',
+  'Vieques', 'Villalba', 'Yabucoa', 'Yauco'
+];
 
 const signupSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
+  municipality: z.string().min(1, 'Please select your municipality'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   confirmPassword: z.string(),
   agreeToTerms: z.boolean().refine(val => val === true, {
@@ -39,6 +57,7 @@ const Signup = () => {
       firstName: '',
       lastName: '',
       email: '',
+      municipality: '',
       password: '',
       confirmPassword: '',
       agreeToTerms: false,
@@ -59,7 +78,7 @@ const Signup = () => {
       if (success) {
         notifySuccess(
           'Account Created Successfully',
-          `Welcome ${data.firstName}! Your account has been created. Please check your email to verify your account.`,
+          `Welcome ${data.firstName}! Your account has been created for ${data.municipality}. Please check your email to verify your account.`,
           true
         );
         notifyWarning(
@@ -159,6 +178,35 @@ const Signup = () => {
                         className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="municipality"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-slate-300">Municipality</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                          <SelectValue placeholder="Select your municipality" className="text-slate-400" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-800 border-slate-600 max-h-60">
+                        {municipalities.map((municipality) => (
+                          <SelectItem 
+                            key={municipality} 
+                            value={municipality}
+                            className="text-white hover:bg-slate-700"
+                          >
+                            {municipality}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
