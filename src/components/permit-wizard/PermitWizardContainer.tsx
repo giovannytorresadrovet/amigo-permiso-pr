@@ -78,12 +78,12 @@ export const PermitWizardContainer = ({
     setBusinessProfile(prev => ({ ...prev, ...data }));
   };
 
-  const canProceed = () => {
+  const canProceed = (): boolean => {
     switch (currentStep) {
       case 0:
-        return businessProfile.name && businessProfile.businessType;
+        return !!(businessProfile.name && businessProfile.businessType);
       case 1:
-        return businessProfile.municipality;
+        return !!businessProfile.municipality;
       case 2:
         return true;
       case 3:
