@@ -1,24 +1,12 @@
+
 import { BusinessDetailsHeader } from './BusinessDetailsHeader';
 import { BusinessMetricsCards } from './BusinessMetricsCards';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BusinessOverviewCard } from './BusinessOverviewCard';
+import { BusinessPermitsCard } from './BusinessPermitsCard';
+import { BusinessOwnerCard } from './BusinessOwnerCard';
+import { BusinessUpcomingActionsCard } from './BusinessUpcomingActionsCard';
+import { BusinessQuickActionsCard } from './BusinessQuickActionsCard';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
-import { 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Globe, 
-  Calendar,
-  Users,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  TrendingUp,
-  FileText,
-  DollarSign
-} from 'lucide-react';
 
 interface BusinessDetailsProps {
   businessId: string;
@@ -104,23 +92,10 @@ export const BusinessDetails = ({ businessId, onBack }: BusinessDetailsProps) =>
     );
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Active':
-        return 'bg-green-100 text-green-800';
-      case 'Pending':
-        return 'bg-orange-100 text-orange-800';
-      case 'Inactive':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   const upcomingActions = [
-    { action: 'Renovar Licencia de Negocio', dueDate: '2024-12-31', priority: 'medium' },
-    { action: 'Inspección de Salud', dueDate: '2024-07-15', priority: 'high' },
-    { action: 'Pago de Patente Municipal', dueDate: '2024-08-01', priority: 'low' }
+    { action: 'Renovar Licencia de Negocio', dueDate: '2024-12-31', priority: 'medium' as const },
+    { action: 'Inspección de Salud', dueDate: '2024-07-15', priority: 'high' as const },
+    { action: 'Pago de Patente Municipal', dueDate: '2024-08-01', priority: 'low' as const }
   ];
 
   return (
@@ -132,161 +107,15 @@ export const BusinessDetails = ({ businessId, onBack }: BusinessDetailsProps) =>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Business Overview */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <span>Información General</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-slate-700">{business.description}</p>
-              
-              <Separator />
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex items-center text-sm text-slate-600">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    {business.location}
-                  </div>
-                  <div className="flex items-center text-sm text-slate-600">
-                    <Phone className="w-4 h-4 mr-2" />
-                    {business.phone}
-                  </div>
-                  <div className="flex items-center text-sm text-slate-600">
-                    <Mail className="w-4 h-4 mr-2" />
-                    {business.email}
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center text-sm text-slate-600">
-                    <Globe className="w-4 h-4 mr-2" />
-                    {business.website}
-                  </div>
-                  <div className="flex items-center text-sm text-slate-600">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Establecido en {business.established}
-                  </div>
-                  <div className="flex items-center text-sm text-slate-600">
-                    <Users className="w-4 h-4 mr-2" />
-                    {business.employees} empleados
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Permits & Licenses */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Permisos y Licencias</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {business.permits.map((permit, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border">
-                    <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${getStatusColor(permit.status)}`}>
-                        {permit.status === 'Active' ? (
-                          <CheckCircle className="w-4 h-4" />
-                        ) : permit.status === 'Pending' ? (
-                          <Clock className="w-4 h-4" />
-                        ) : (
-                          <AlertTriangle className="w-4 h-4" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium text-slate-800">{permit.name}</p>
-                        <p className="text-sm text-slate-600">Vence: {permit.expires}</p>
-                        <p className="text-sm text-slate-500">Costo: {permit.cost}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={getStatusColor(permit.status)}>
-                        {permit.status}
-                      </Badge>
-                      <Button variant="outline" size="sm">
-                        <FileText className="w-4 h-4 mr-1" />
-                        Ver
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <BusinessOverviewCard business={business} />
+          <BusinessPermitsCard permits={business.permits} />
         </div>
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Business Owner */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Propietario</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div>
-                <p className="text-sm text-slate-600">Nombre</p>
-                <p className="font-medium text-slate-800">{business.owner}</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-600">ID Fiscal</p>
-                <p className="font-medium text-slate-800">{business.taxId}</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Upcoming Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Próximas Acciones</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {upcomingActions.map((action, index) => (
-                <div key={index} className="p-3 border rounded-lg">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-slate-800">{action.action}</p>
-                      <p className="text-xs text-slate-500">Fecha límite: {action.dueDate}</p>
-                    </div>
-                    <Badge 
-                      variant="outline" 
-                      className={
-                        action.priority === 'high' ? 'border-red-200 text-red-700' :
-                        action.priority === 'medium' ? 'border-yellow-200 text-yellow-700' :
-                        'border-gray-200 text-gray-700'
-                      }
-                    >
-                      {action.priority === 'high' ? 'Alta' : 
-                       action.priority === 'medium' ? 'Media' : 'Baja'}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Acciones Rápidas</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button className="w-full" size="sm">
-                <FileText className="w-4 h-4 mr-2" />
-                Generar Reporte
-              </Button>
-              <Button className="w-full" variant="outline" size="sm">
-                <Calendar className="w-4 h-4 mr-2" />
-                Programar Cita
-              </Button>
-              <Button className="w-full" variant="outline" size="sm">
-                <DollarSign className="w-4 h-4 mr-2" />
-                Ver Costos
-              </Button>
-            </CardContent>
-          </Card>
+          <BusinessOwnerCard owner={business.owner} taxId={business.taxId} />
+          <BusinessUpcomingActionsCard actions={upcomingActions} />
+          <BusinessQuickActionsCard />
         </div>
       </div>
     </div>

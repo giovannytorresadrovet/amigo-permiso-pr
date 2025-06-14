@@ -22,7 +22,7 @@ export const BusinessList = ({ onBusinessSelect }: BusinessListProps) => {
     statusFilter
   );
 
-  const hasFilters = searchQuery || statusFilter !== 'all';
+  const hasFilters = Boolean(searchQuery || statusFilter !== 'all');
 
   return (
     <div className="space-y-6">
