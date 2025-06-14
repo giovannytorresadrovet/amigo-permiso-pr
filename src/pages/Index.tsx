@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { BusinessSetupWizard } from '@/components/BusinessSetupWizard';
+import { EnhancedBusinessWizard } from '@/components/EnhancedBusinessWizard';
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
 import { AppHeader } from '@/components/AppHeader';
@@ -71,8 +71,19 @@ const Index = () => {
 
   const t = translations[currentLanguage];
 
+  const handleWizardComplete = (businessData: any) => {
+    console.log('Business setup completed:', businessData);
+    setActiveSection('home');
+  };
+
   if (activeSection === 'wizard') {
-    return <BusinessSetupWizard language={currentLanguage} onBack={() => setActiveSection('home')} />;
+    return (
+      <EnhancedBusinessWizard 
+        language={currentLanguage} 
+        onComplete={handleWizardComplete}
+        onBack={() => setActiveSection('home')} 
+      />
+    );
   }
 
   if (activeSection === 'documents') {
