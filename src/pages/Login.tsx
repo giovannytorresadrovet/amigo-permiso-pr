@@ -1,37 +1,44 @@
+
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Shield, Eye, EyeOff } from 'lucide-react';
+import { Shield, CheckCircle, Users, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormField } from '@/components/ui/form';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { SocialLoginButton } from '@/components/auth/SocialLoginButton';
 import { AuthModeToggle } from '@/components/auth/AuthModeToggle';
 import { Auth0LoginButton } from '@/components/auth/Auth0LoginButton';
+import { EnhancedFormField } from '@/components/auth/EnhancedFormField';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 import { auth0Features } from '@/lib/auth0/config';
+import { getAuthTranslation } from '@/utils/translations/authTranslations';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
+  rememberMe: z.boolean().default(false),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [language, setLanguage] = useState<'es' | 'en'>('es');
   const { notifySuccess, notifyError } = useNotificationEffects();
+  const navigate = useNavigate();
+  const t = (key: string) => getAuthTranslation(key, language);
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
+      rememberMe: false,
     },
   });
 
@@ -39,7 +46,6 @@ const Login = () => {
     setIsLoading(true);
     console.log('Login attempt:', data);
     
-    // Simulate login process
     try {
       // TODO: Replace with actual authentication logic
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -49,20 +55,22 @@ const Login = () => {
       
       if (success) {
         notifySuccess(
-          'Login Successful',
-          'Welcome back! You have been successfully logged in.',
+          t('loginSuccess'),
+          t('signingInSecurely'),
           false
         );
+        // Redirect to dashboard after successful login
+        setTimeout(() => navigate('/dashboard'), 1000);
       } else {
         notifyError(
-          'Login Failed',
-          'Invalid email or password. Please check your credentials and try again.',
+          t('loginError'),
+          t('invalidCredentials'),
           true
         );
       }
     } catch (error) {
       notifyError(
-        'Login Error',
+        t('loginError'),
         'An unexpected error occurred. Please try again later.',
         true
       );
@@ -74,22 +82,31 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 -right-4 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 -right-4 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl animate-pulse"></div>
       </div>
       
-      <Card className="w-full max-w-md relative z-10 bg-slate-800/50 border-slate-700">
+      <Card className="w-full max-w-md relative z-10 bg-slate-800/50 border-slate-700 animate-scale-in">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
               <Shield className="w-7 h-7 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-white">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-white">
+            {t('welcomeBackEnhanced')}
+          </CardTitle>
           <CardDescription className="text-slate-400">
-            Sign in to your PermitPR account
+            {t('signInDescription')}
           </CardDescription>
+          
+          {/* Cultural Sensitivity Badge */}
+          <div className="flex items-center justify-center mt-4 text-xs text-slate-400">
+            <Globe className="w-3 h-3 mr-1" />
+            {t('puertoRicanBusiness')}
+          </div>
         </CardHeader>
+        
         <CardContent className="space-y-6">
           <AuthModeToggle />
 
@@ -133,50 +150,52 @@ const Login = () => {
                   <FormField
                     control={form.control}
                     name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-300">Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="email"
-                            placeholder="Enter your email"
-                            className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
-                            disabled={isLoading}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                    render={({ field, fieldState }) => (
+                      <EnhancedFormField
+                        field={field}
+                        type="email"
+                        placeholder="tu@email.com"
+                        label={t('email')}
+                        error={fieldState.error?.message}
+                        disabled={isLoading}
+                      />
                     )}
                   />
                   
                   <FormField
                     control={form.control}
                     name="password"
+                    render={({ field, fieldState }) => (
+                      <EnhancedFormField
+                        field={field}
+                        label={t('password')}
+                        placeholder={language === 'es' ? 'Ingresa tu contraseña' : 'Enter your password'}
+                        showPasswordToggle={true}
+                        error={fieldState.error?.message}
+                        disabled={isLoading}
+                      />
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="rememberMe"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-300">Password</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              {...field}
-                              type={showPassword ? 'text' : 'password'}
-                              placeholder="Enter your password"
-                              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
-                              disabled={isLoading}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
-                              disabled={isLoading}
-                            >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="rememberMe"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className="border-slate-600 data-[state=checked]:bg-blue-500"
+                          disabled={isLoading}
+                        />
+                        <label
+                          htmlFor="rememberMe"
+                          className="text-sm text-slate-300 cursor-pointer"
+                        >
+                          {t('rememberMe')}
+                        </label>
+                      </div>
                     )}
                   />
 
@@ -185,7 +204,7 @@ const Login = () => {
                       to="/forgot-password"
                       className="text-sm text-blue-400 hover:text-blue-300 underline"
                     >
-                      Forgot password?
+                      {t('forgotPassword')}
                     </Link>
                   </div>
 
@@ -194,21 +213,37 @@ const Login = () => {
                     className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Signing in...' : 'Sign In'}
+                    {isLoading ? t('signingInSecurely') : t('signIn')}
                   </Button>
                 </form>
               </Form>
 
               <div className="mt-6 text-center">
                 <p className="text-slate-400">
-                  Don't have an account?{' '}
+                  {language === 'es' ? '¿No tienes una cuenta?' : "Don't have an account?"}{' '}
                   <Link to="/signup" className="text-blue-400 hover:text-blue-300 underline">
-                    Sign up
+                    {t('signUp')}
                   </Link>
                 </p>
               </div>
             </>
           )}
+
+          {/* Trust Indicators */}
+          <div className="space-y-3 pt-4 border-t border-slate-600">
+            <div className="flex items-center text-xs text-slate-400">
+              <Shield className="w-3 h-3 mr-2 text-green-500" />
+              {t('secureConnection')}
+            </div>
+            <div className="flex items-center text-xs text-slate-400">
+              <CheckCircle className="w-3 h-3 mr-2 text-blue-500" />
+              {t('dataProtected')}
+            </div>
+            <div className="flex items-center text-xs text-slate-400">
+              <Users className="w-3 h-3 mr-2 text-teal-500" />
+              {t('trustedByBusinesses')}
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
