@@ -4,402 +4,268 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Textarea } from '@/components/ui/textarea';
+import { Progress } from '@/components/ui/progress';
 import { 
+  ArrowLeft, 
   AlertTriangle, 
+  CheckCircle, 
+  Clock, 
   Phone, 
-  FileText, 
-  Share2, 
-  Download, 
-  MessageCircle,
-  Shield,
-  Clock,
-  CheckCircle,
-  Copy,
-  Mail
+  MapPin, 
+  Building,
+  FileText,
+  Camera,
+  MessageSquare
 } from 'lucide-react';
-import { useNotificationEffects } from '@/hooks/useNotificationEffects';
+
+interface EmergencyBusinessData {
+  id: string;
+  name: string;
+  address: string;
+  permitNumber?: string;
+  legalStatus: 'legal' | 'in_process' | 'illegal' | 'expiring_soon';
+  ownerName: string;
+  phone: string;
+}
 
 interface InspectorEmergencyModeProps {
-  businessData: {
-    name: string;
-    address: string;
-    permitNumber?: string;
-    legalStatus: 'legal' | 'in_process' | 'illegal';
-    ownerName: string;
-    phone: string;
-  };
+  businessData: EmergencyBusinessData;
   language: 'es' | 'en';
   onClose: () => void;
 }
 
-export const InspectorEmergencyMode = ({ businessData, language, onClose }: InspectorEmergencyModeProps) => {
-  const [activeScript, setActiveScript] = useState<string | null>(null);
+export const InspectorEmergencyMode = ({ 
+  businessData, 
+  language, 
+  onClose 
+}: InspectorEmergencyModeProps) => {
+  const [inspectionStatus, setInspectionStatus] = useState<'pending' | 'in_progress' | 'completed'>('pending');
   const [notes, setNotes] = useState('');
-  const { notifySuccess, notifyError } = useNotificationEffects();
 
-  const translations = {
-    es: {
-      title: 'Modo Inspector en Puerta',
-      subtitle: 'Ayuda inmediata cuando un inspector llega a tu negocio',
-      statusCard: 'Estado del Negocio',
-      quickActions: 'Acciones Rápidas',
-      communicationScripts: 'Guiones de Comunicación',
-      emergencyContacts: 'Contactos de Emergencia',
-      documentationSupport: 'Documentación de Soporte',
-      generatePDF: 'Generar PDF de Estado',
-      shareViaEmail: 'Compartir por Email',
-      shareViaWhatsApp: 'Compartir por WhatsApp',
-      callSupport: 'Llamar Soporte',
-      callMunicipality: 'Llamar Municipio',
-      whatToSay: 'Qué Decir al Inspector',
-      delayTactics: 'Tácticas de Demora',
-      cooperationScript: 'Guión de Cooperación',
-      notes: 'Notas de la Visita',
-      notesPlaceholder: 'Documenta qué dijo el inspector, qué documentos solicitó, etc.',
-      copyScript: 'Copiar Guión',
-      scriptCopied: 'Guión copiado al portapapeles',
-      pdfGenerated: 'PDF generado exitosamente',
-      emailSent: 'Email enviado',
-      legal: 'Legal',
-      inProcess: 'En Proceso',
-      illegal: 'Ilegal'
-    },
-    en: {
-      title: 'Inspector at Door Mode',
-      subtitle: 'Immediate help when an inspector arrives at your business',
-      statusCard: 'Business Status',
-      quickActions: 'Quick Actions',
-      communicationScripts: 'Communication Scripts',
-      emergencyContacts: 'Emergency Contacts',
-      documentationSupport: 'Documentation Support',
-      generatePDF: 'Generate Status PDF',
-      shareViaEmail: 'Share via Email',
-      shareViaWhatsApp: 'Share via WhatsApp',
-      callSupport: 'Call Support',
-      callMunicipality: 'Call Municipality',
-      whatToSay: 'What to Say to Inspector',
-      delayTactics: 'Delay Tactics',
-      cooperationScript: 'Cooperation Script',
-      notes: 'Visit Notes',
-      notesPlaceholder: 'Document what the inspector said, what documents they requested, etc.',
-      copyScript: 'Copy Script',
-      scriptCopied: 'Script copied to clipboard',
-      pdfGenerated: 'PDF generated successfully',
-      emailSent: 'Email sent',
-      legal: 'Legal',
-      inProcess: 'In Process',
-      illegal: 'Illegal'
-    }
+  const t = (key: string) => {
+    const translations = {
+      emergencyMode: language === 'es' ? 'Modo de Emergencia' : 'Emergency Mode',
+      inspectorView: language === 'es' ? 'Vista del Inspector' : 'Inspector View',
+      businessInfo: language === 'es' ? 'Información del Negocio' : 'Business Information',
+      contactOwner: language === 'es' ? 'Contactar Propietario' : 'Contact Owner',
+      takePhotos: language === 'es' ? 'Tomar Fotos' : 'Take Photos',
+      addNotes: language === 'es' ? 'Agregar Notas' : 'Add Notes',
+      completeInspection: language === 'es' ? 'Completar Inspección' : 'Complete Inspection',
+      back: language === 'es' ? 'Regresar' : 'Back',
+      address: language === 'es' ? 'Dirección' : 'Address',
+      owner: language === 'es' ? 'Propietario' : 'Owner',
+      phone: language === 'es' ? 'Teléfono' : 'Phone',
+      permitNumber: language === 'es' ? 'Número de Permiso' : 'Permit Number',
+      status: language === 'es' ? 'Estado' : 'Status',
+      legal: language === 'es' ? 'Legal' : 'Legal',
+      illegal: language === 'es' ? 'Ilegal' : 'Illegal',
+      in_process: language === 'es' ? 'En Proceso' : 'In Process',
+      expiring_soon: language === 'es' ? 'Expira Pronto' : 'Expiring Soon'
+    };
+    return translations[key as keyof typeof translations] || key;
   };
 
-  const t = translations[language];
-
-  const getStatusColor = (status: string) => {
+  const getStatusConfig = (status: string) => {
     switch (status) {
-      case 'legal': return 'bg-green-500/20 text-green-300 border-green-500/30';
-      case 'in_process': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-      case 'illegal': return 'bg-red-500/20 text-red-300 border-red-500/30';
-      default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+      case 'legal':
+        return {
+          color: 'bg-green-500',
+          textColor: 'text-green-500',
+          label: t('legal')
+        };
+      case 'expiring_soon':
+        return {
+          color: 'bg-yellow-500',
+          textColor: 'text-yellow-500',
+          label: t('expiring_soon')
+        };
+      case 'in_process':
+        return {
+          color: 'bg-blue-500',
+          textColor: 'text-blue-500',
+          label: t('in_process')
+        };
+      case 'illegal':
+        return {
+          color: 'bg-red-500',
+          textColor: 'text-red-500',
+          label: t('illegal')
+        };
+      default:
+        return {
+          color: 'bg-gray-500',
+          textColor: 'text-gray-500',
+          label: status
+        };
     }
   };
 
-  const scripts = {
-    es: {
-      cooperation: `Buenos días/tardes. Entiendo que está realizando una inspección.
-
-Mi nombre es ${businessData.ownerName} y soy el propietario de ${businessData.name}.
-
-Estoy completamente dispuesto/a a cooperar con su inspección. Permítame un momento para reunir los documentos que pueda necesitar.
-
-¿Podría indicarme específicamente qué documentos o información requiere para su inspección?
-
-Mientras tanto, aquí tiene mi información de contacto y los datos del negocio.`,
-
-      delay: `Buenos días/tardes. Entiendo que está aquí para una inspección.
-
-Soy el propietario/a de este establecimiento. En este momento estoy esperando algunos documentos importantes que están en proceso de renovación.
-
-¿Sería posible programar la inspección para la próxima semana? Esto me permitiría tener toda la documentación completa y organizada.
-
-Puedo proporcionarle mi información de contacto para coordinar una nueva fecha que sea conveniente para ambos.`,
-
-      emergency: `Buenos días/tardes inspector.
-
-Reconozco que puede haber algunas deficiencias en mi documentación. Estoy trabajando activamente con mi asesor legal y contable para resolver cualquier situación pendiente.
-
-¿Podría orientarme sobre cuáles son las próximas acciones que debo tomar?
-
-Estoy comprometido/a a cumplir con todas las regulaciones y agradecería su orientación profesional.`
-    },
-    en: {
-      cooperation: `Good morning/afternoon. I understand you are conducting an inspection.
-
-My name is ${businessData.ownerName} and I am the owner of ${businessData.name}.
-
-I am completely willing to cooperate with your inspection. Please allow me a moment to gather any documents you may need.
-
-Could you please indicate specifically what documents or information you require for your inspection?
-
-In the meantime, here is my contact information and business details.`,
-
-      delay: `Good morning/afternoon. I understand you are here for an inspection.
-
-I am the owner of this establishment. At this time, I am waiting for some important documents that are in the process of renewal.
-
-Would it be possible to schedule the inspection for next week? This would allow me to have all documentation complete and organized.
-
-I can provide you with my contact information to coordinate a new date that is convenient for both of us.`,
-
-      emergency: `Good morning/afternoon inspector.
-
-I acknowledge that there may be some deficiencies in my documentation. I am actively working with my legal and accounting advisor to resolve any pending situations.
-
-Could you guide me on what the next actions I should take are?
-
-I am committed to complying with all regulations and would appreciate your professional guidance.`
-    }
-  };
-
-  const handleGeneratePDF = async () => {
-    try {
-      // Simulate PDF generation
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      notifySuccess(t.pdfGenerated, '', false);
-    } catch (error) {
-      notifyError('Error', 'Failed to generate PDF', true);
-    }
-  };
-
-  const handleShareEmail = async () => {
-    try {
-      const subject = encodeURIComponent(`Business Status - ${businessData.name}`);
-      const body = encodeURIComponent(`
-Business: ${businessData.name}
-Owner: ${businessData.ownerName}
-Address: ${businessData.address}
-Status: ${businessData.legalStatus}
-Permit: ${businessData.permitNumber || 'N/A'}
-      `);
-      window.open(`mailto:?subject=${subject}&body=${body}`);
-      notifySuccess(t.emailSent, '', false);
-    } catch (error) {
-      notifyError('Error', 'Failed to open email', true);
-    }
-  };
-
-  const handleShareWhatsApp = () => {
-    const message = encodeURIComponent(`
-*${businessData.name}*
-Propietario: ${businessData.ownerName}
-Dirección: ${businessData.address}
-Estado: ${businessData.legalStatus}
-Permiso: ${businessData.permitNumber || 'N/A'}
-    `);
-    window.open(`https://wa.me/?text=${message}`);
-  };
-
-  const handleCopyScript = async (scriptText: string) => {
-    try {
-      await navigator.clipboard.writeText(scriptText);
-      notifySuccess(t.scriptCopied, '', false);
-    } catch (error) {
-      notifyError('Error', 'Failed to copy script', true);
-    }
-  };
-
-  const handleCall = (number: string) => {
-    window.open(`tel:${number}`);
-  };
+  const statusConfig = getStatusConfig(businessData.legalStatus);
 
   return (
-    <div className="min-h-screen bg-red-900/20 p-4">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Emergency Header */}
-        <Alert className="border-red-500/50 bg-red-500/10">
-          <AlertTriangle className="w-5 h-5 text-red-400" />
-          <AlertDescription className="text-red-200 text-lg font-semibold">
-            {t.title}
-          </AlertDescription>
-        </Alert>
-
-        <div className="grid lg:grid-cols-2 gap-6">
-          {/* Left Column - Business Status & Quick Actions */}
-          <div className="space-y-6">
-            {/* Business Status Card */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center">
-                  <Shield className="w-5 h-5 mr-2" />
-                  {t.statusCard}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-slate-300">Negocio:</span>
-                    <span className="text-white font-medium">{businessData.name}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-300">Propietario:</span>
-                    <span className="text-white">{businessData.ownerName}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-300">Dirección:</span>
-                    <span className="text-white text-sm">{businessData.address}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Estado:</span>
-                    <Badge className={getStatusColor(businessData.legalStatus)}>
-                      {t[businessData.legalStatus as keyof typeof t]}
-                    </Badge>
-                  </div>
-                  {businessData.permitNumber && (
-                    <div className="flex justify-between">
-                      <span className="text-slate-300">Permiso:</span>
-                      <span className="text-white font-mono">{businessData.permitNumber}</span>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">{t.quickActions}</CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-3">
-                <Button onClick={handleGeneratePDF} className="bg-blue-600 hover:bg-blue-700">
-                  <FileText className="w-4 h-4 mr-2" />
-                  PDF
-                </Button>
-                <Button onClick={handleShareEmail} variant="outline" className="border-slate-600">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Email
-                </Button>
-                <Button onClick={handleShareWhatsApp} className="bg-green-600 hover:bg-green-700">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  WhatsApp
-                </Button>
-                <Button onClick={() => handleCall('+1-787-555-0123')} className="bg-red-600 hover:bg-red-700">
-                  <Phone className="w-4 h-4 mr-2" />
-                  SOS
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Emergency Contacts */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">{t.emergencyContacts}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  onClick={() => handleCall('+1-787-555-0199')} 
-                  variant="outline" 
-                  className="w-full border-slate-600 justify-start"
-                >
-                  <Phone className="w-4 h-4 mr-2" />
-                  {t.callSupport}: (787) 555-0199
-                </Button>
-                <Button 
-                  onClick={() => handleCall('+1-787-555-0100')} 
-                  variant="outline" 
-                  className="w-full border-slate-600 justify-start"
-                >
-                  <Phone className="w-4 h-4 mr-2" />
-                  {t.callMunicipality}: (787) 555-0100
-                </Button>
-              </CardContent>
-            </Card>
+    <div className="min-h-screen bg-gradient-to-br from-red-900 to-red-700 text-white">
+      {/* Header */}
+      <div className="bg-red-800/50 backdrop-blur-sm border-b border-red-600/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost" 
+                onClick={onClose}
+                className="text-white hover:bg-red-700/50"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                {t('back')}
+              </Button>
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="w-6 h-6 text-yellow-400" />
+                <h1 className="text-xl font-bold">{t('emergencyMode')}</h1>
+                <Badge className="bg-red-600 text-white">
+                  {t('inspectorView')}
+                </Badge>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
 
-          {/* Right Column - Communication Scripts */}
-          <div className="space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">{t.communicationScripts}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-3">
-                  <Button
-                    onClick={() => setActiveScript(activeScript === 'cooperation' ? null : 'cooperation')}
-                    variant={activeScript === 'cooperation' ? 'default' : 'outline'}
-                    className="justify-start"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    {t.cooperationScript}
-                  </Button>
-                  
-                  <Button
-                    onClick={() => setActiveScript(activeScript === 'delay' ? null : 'delay')}
-                    variant={activeScript === 'delay' ? 'default' : 'outline'}
-                    className="justify-start"
-                  >
-                    <Clock className="w-4 h-4 mr-2" />
-                    {t.delayTactics}
-                  </Button>
-                  
-                  <Button
-                    onClick={() => setActiveScript(activeScript === 'emergency' ? null : 'emergency')}
-                    variant={activeScript === 'emergency' ? 'default' : 'outline'}
-                    className="justify-start"
-                  >
-                    <AlertTriangle className="w-4 h-4 mr-2" />
-                    {t.whatToSay}
-                  </Button>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Business Information */}
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader>
+              <CardTitle className="flex items-center text-white">
+                <Building className="w-5 h-5 mr-2" />
+                {t('businessInfo')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-2">{businessData.name}</h3>
+                <Badge className={`${statusConfig.color} text-white`}>
+                  {statusConfig.label}
+                </Badge>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <MapPin className="w-5 h-5 text-white/70 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-white/70">{t('address')}</p>
+                    <p className="text-white">{businessData.address}</p>
+                  </div>
                 </div>
 
-                {activeScript && (
-                  <Card className="bg-slate-700/50 border-slate-600">
-                    <CardContent className="pt-4">
-                      <div className="flex justify-between items-center mb-3">
-                        <h4 className="text-white font-medium">
-                          {activeScript === 'cooperation' && t.cooperationScript}
-                          {activeScript === 'delay' && t.delayTactics}
-                          {activeScript === 'emergency' && t.whatToSay}
-                        </h4>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleCopyScript(scripts[language][activeScript as keyof typeof scripts[typeof language]])}
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                      </div>
-                      <div className="text-slate-300 text-sm whitespace-pre-line bg-slate-800/50 p-3 rounded">
-                        {scripts[language][activeScript as keyof typeof scripts[typeof language]]}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </CardContent>
-            </Card>
+                <div className="flex items-start space-x-3">
+                  <Building className="w-5 h-5 text-white/70 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-white/70">{t('owner')}</p>
+                    <p className="text-white">{businessData.ownerName}</p>
+                  </div>
+                </div>
 
-            {/* Visit Notes */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">{t.notes}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Textarea
+                <div className="flex items-start space-x-3">
+                  <Phone className="w-5 h-5 text-white/70 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-white/70">{t('phone')}</p>
+                    <p className="text-white">{businessData.phone}</p>
+                  </div>
+                </div>
+
+                {businessData.permitNumber && (
+                  <div className="flex items-start space-x-3">
+                    <FileText className="w-5 h-5 text-white/70 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-white/70">{t('permitNumber')}</p>
+                      <p className="text-white">{businessData.permitNumber}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Inspector Actions */}
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader>
+              <CardTitle className="text-white">Inspector Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white h-20"
+                  onClick={() => window.open(`tel:${businessData.phone}`)}
+                >
+                  <div className="text-center">
+                    <Phone className="w-6 h-6 mx-auto mb-1" />
+                    <span className="text-sm">{t('contactOwner')}</span>
+                  </div>
+                </Button>
+
+                <Button 
+                  className="bg-green-600 hover:bg-green-700 text-white h-20"
+                  onClick={() => {
+                    // In a real app, this would open the camera
+                    console.log('Opening camera for inspection photos');
+                  }}
+                >
+                  <div className="text-center">
+                    <Camera className="w-6 h-6 mx-auto mb-1" />
+                    <span className="text-sm">{t('takePhotos')}</span>
+                  </div>
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-white text-sm font-medium">
+                  {t('addNotes')}
+                </label>
+                <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder={t.notesPlaceholder}
-                  className="bg-slate-700 border-slate-600 text-white min-h-24"
+                  className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 min-h-[100px]"
+                  placeholder={language === 'es' ? 'Agregar notas de inspección...' : 'Add inspection notes...'}
                 />
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-white text-sm font-medium">
+                  Inspection Progress
+                </label>
+                <Progress 
+                  value={inspectionStatus === 'completed' ? 100 : inspectionStatus === 'in_progress' ? 50 : 0} 
+                  className="h-2"
+                />
+              </div>
+
+              <Button 
+                className="w-full bg-red-600 hover:bg-red-700 text-white"
+                onClick={() => {
+                  setInspectionStatus('completed');
+                  console.log('Inspection completed for:', businessData.name);
+                }}
+                disabled={inspectionStatus === 'completed'}
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                {t('completeInspection')}
+              </Button>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Close Emergency Mode */}
-        <div className="text-center">
-          <Button onClick={onClose} size="lg" className="bg-slate-600 hover:bg-slate-700">
-            Salir del Modo de Emergencia
-          </Button>
-        </div>
+        {/* Status Alert */}
+        {businessData.legalStatus === 'illegal' && (
+          <Alert className="mt-6 bg-red-600/20 border-red-500 text-white">
+            <AlertTriangle className="w-4 h-4" />
+            <AlertDescription>
+              {language === 'es' 
+                ? 'ADVERTENCIA: Este negocio está operando sin permisos válidos. Se requiere acción inmediata.'
+                : 'WARNING: This business is operating without valid permits. Immediate action required.'
+              }
+            </AlertDescription>
+          </Alert>
+        )}
       </div>
     </div>
   );
