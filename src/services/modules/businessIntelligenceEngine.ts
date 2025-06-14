@@ -14,7 +14,7 @@ export class BusinessIntelligenceEngine {
             name: 'Business Growth Accelerator',
             description: 'Automated tools for scaling your business operations and expanding your market reach',
             version: '1.0.0',
-            category: 'growth',
+            category: 'automation',
             tags: ['scaling', 'automation', 'marketing'],
             author: 'Permisoria Team',
             compatibility: { minVersion: '1.0.0' },
@@ -24,7 +24,7 @@ export class BusinessIntelligenceEngine {
         ],
         confidence: 0.85,
         reasoning: 'Small businesses benefit from automated growth tools to scale efficiently',
-        category: 'growth',
+        category: 'automation',
         priority: 'high'
       });
     }
