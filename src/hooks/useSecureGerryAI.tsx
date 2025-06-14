@@ -39,8 +39,8 @@ export const useSecureGerryAI = ({
           const welcomeMessage: Message = {
             id: 'welcome-secure',
             text: language === 'es' 
-              ? `🔒 Hola ${userProfile.firstName}! Soy Gerry, tu asistente AI seguro. Tengo acceso únicamente a tus datos: ${businesses.length} negocio(s) registrado(s). Toda la información está protegida y es privada. ¿En qué puedo ayudarte hoy?`
-              : `🔒 Hello ${userProfile.firstName}! I'm Gerry, your secure AI assistant. I only have access to your data: ${businesses.length} registered business(es). All information is protected and private. How can I help you today?`,
+              ? `🔒 Hola ${userProfile.metadata?.firstName || userProfile.name}! Soy Gerry, tu asistente AI seguro. Tengo acceso únicamente a tus datos: ${businesses.length} negocio(s) registrado(s). Toda la información está protegida y es privada. ¿En qué puedo ayudarte hoy?`
+              : `🔒 Hello ${userProfile.metadata?.firstName || userProfile.name}! I'm Gerry, your secure AI assistant. I only have access to your data: ${businesses.length} registered business(es). All information is protected and private. How can I help you today?`,
             sender: 'gerry',
             timestamp: new Date(),
             type: 'text',

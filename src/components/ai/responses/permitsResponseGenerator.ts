@@ -7,7 +7,7 @@ export class PermitsResponseGenerator {
     const pendingPermits = permits.filter(p => p.status === 'pending');
     
     if (language === 'es') {
-      return `🔒 **Permisos de ${userContext.userProfile.firstName}**
+      return `🔒 **Permisos de ${userContext.userProfile.metadata?.firstName || userContext.userProfile.name}**
 
 🏛️ **Estado seguro de tus permisos:**
 - ✅ Activos: ${activePermits.length}
@@ -18,7 +18,7 @@ export class PermitsResponseGenerator {
 
 💡 **Próximo paso:** ${pendingPermits.length > 0 ? 'Completar permisos pendientes' : 'Mantener renovaciones al día'}`;
     } else {
-      return `🔒 **Permits for ${userContext.userProfile.firstName}**
+      return `🔒 **Permits for ${userContext.userProfile.metadata?.firstName || userContext.userProfile.name}**
 
 🏛️ **Secure status of your permits:**
 - ✅ Active: ${activePermits.length}

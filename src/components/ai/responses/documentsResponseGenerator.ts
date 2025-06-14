@@ -7,7 +7,7 @@ export class DocumentsResponseGenerator {
     const rejectedDocs = documents.filter(doc => doc.status === 'rejected');
     
     if (language === 'es') {
-      return `🔒 **Documentos de ${userContext.userProfile.firstName}**
+      return `🔒 **Documentos de ${userContext.userProfile.metadata?.firstName || userContext.userProfile.name}**
 
 📄 **Estado seguro de tus documentos:**
 - ✅ Validados: ${documents.filter(d => d.status === 'validated').length}
@@ -21,7 +21,7 @@ ${rejectedDocs.map(doc => `• ${doc.fileName}`).join('\n')}
 
 🛡️ **Seguridad:** Todos tus documentos están protegidos con encriptación de nivel empresarial.`;
     } else {
-      return `🔒 **Documents for ${userContext.userProfile.firstName}**
+      return `🔒 **Documents for ${userContext.userProfile.metadata?.firstName || userContext.userProfile.name}**
 
 📄 **Secure status of your documents:**
 - ✅ Validated: ${documents.filter(d => d.status === 'validated').length}

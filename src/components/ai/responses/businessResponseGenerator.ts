@@ -6,7 +6,7 @@ export class BusinessResponseGenerator {
     const { userProfile, businesses } = userContext;
     
     if (language === 'es') {
-      return `🔒 **Información segura de ${userProfile.firstName}**
+      return `🔒 **Información segura de ${userProfile.metadata?.firstName || userProfile.name}**
 
 📊 **Tus ${businesses.length} negocio(s) registrado(s):**
 
@@ -25,7 +25,7 @@ ${index + 1}. **${business.name}** (${business.type})
 
 💡 ¿Qué negocio específico quieres revisar?`;
     } else {
-      return `🔒 **Secure information for ${userProfile.firstName}**
+      return `🔒 **Secure information for ${userProfile.metadata?.firstName || userProfile.name}**
 
 📊 **Your ${businesses.length} registered business(es):**
 

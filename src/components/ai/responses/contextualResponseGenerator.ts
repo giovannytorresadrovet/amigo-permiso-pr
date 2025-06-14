@@ -7,8 +7,8 @@ export class ContextualResponseGenerator {
       return `🔒 He analizado tu consulta "${userMessage}" dentro de tu contexto seguro.
 
 👤 **Tu perfil protegido:**
-- Usuario: ${userContext.userProfile.firstName} ${userContext.userProfile.lastName}
-- Municipio: ${userContext.userProfile.municipality || 'No especificado'}
+- Usuario: ${userContext.userProfile.metadata?.firstName || userContext.userProfile.name} ${userContext.userProfile.metadata?.lastName || ''}
+- Municipio: ${userContext.userProfile.metadata?.municipality || 'No especificado'}
 - Negocios: ${userContext.businesses.length}
 
 🛡️ **Seguridad garantizada:**
@@ -26,8 +26,8 @@ ${articles.length > 0 ? '- Artículos relevantes de la base de conocimientos' : 
       return `🔒 I've analyzed your query "${userMessage}" within your secure context.
 
 👤 **Your protected profile:**
-- User: ${userContext.userProfile.firstName} ${userContext.userProfile.lastName}
-- Municipality: ${userContext.userProfile.municipality || 'Not specified'}
+- User: ${userContext.userProfile.metadata?.firstName || userContext.userProfile.name} ${userContext.userProfile.metadata?.lastName || ''}
+- Municipality: ${userContext.userProfile.metadata?.municipality || 'Not specified'}
 - Businesses: ${userContext.businesses.length}
 
 🛡️ **Security guaranteed:**

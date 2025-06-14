@@ -4,7 +4,7 @@ import type { SecureUserContext } from '../security/types';
 export class SecurityResponseGenerator {
   static generateSecurityInformationResponse(userContext: SecureUserContext, language: 'es' | 'en'): string {
     if (language === 'es') {
-      return `🔒 **Información de Seguridad para ${userContext.userProfile.firstName}**
+      return `🔒 **Información de Seguridad para ${userContext.userProfile.metadata?.firstName || userContext.userProfile.name}**
 
 🛡️ **Protección de tus datos:**
 - ✅ Encriptación AES-256 
@@ -24,7 +24,7 @@ export class SecurityResponseGenerator {
 
 ¿Tienes alguna pregunta sobre la seguridad de tus datos?`;
     } else {
-      return `🔒 **Security Information for ${userContext.userProfile.firstName}**
+      return `🔒 **Security Information for ${userContext.userProfile.metadata?.firstName || userContext.userProfile.name}**
 
 🛡️ **Protection of your data:**
 - ✅ AES-256 encryption
