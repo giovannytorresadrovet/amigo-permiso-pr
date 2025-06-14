@@ -38,15 +38,15 @@ const permits = [
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'approved':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-50 text-green-700 border-green-200';
     case 'in-progress':
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-blue-50 text-blue-700 border-blue-200';
     case 'pending':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-amber-50 text-amber-700 border-amber-200';
     case 'requires-action':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-50 text-red-700 border-red-200';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-slate-50 text-slate-700 border-slate-200';
   }
 };
 
@@ -69,7 +69,7 @@ export const PermitsList = () => {
               <div className="flex-1">
                 <div className="flex items-center space-x-2">
                   <h4 className="font-medium text-slate-800">{permit.title}</h4>
-                  <Badge className={getStatusColor(permit.status)}>
+                  <Badge className={`border ${getStatusColor(permit.status)}`}>
                     {permit.status.replace('-', ' ')}
                   </Badge>
                 </div>
