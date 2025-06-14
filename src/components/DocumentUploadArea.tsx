@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -165,6 +164,16 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
     }
   };
 
+  const getCategoryName = (type: string): string => {
+    const validTypes = ['legal', 'business', 'zoning', 'tax', 'insurance'] as const;
+    type ValidType = typeof validTypes[number];
+    
+    if (validTypes.includes(type as ValidType)) {
+      return t.categories[type as ValidType];
+    }
+    return type; // fallback to the original type string
+  };
+
   const completedDocs = documents.filter(doc => doc.status === 'validated').length;
   const totalDocs = documents.length;
   const progressPercentage = (completedDocs / totalDocs) * 100;
@@ -272,7 +281,7 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
                   </div>
                 </div>
                 <CardDescription className="text-slate-400">
-                  {t.categories[doc.type as keyof typeof t.categories]} • {t.required}
+                  {getCategoryName(doc.type)} • {t.required}
                 </CardDescription>
               </CardHeader>
               
