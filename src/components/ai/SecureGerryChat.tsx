@@ -42,7 +42,7 @@ export const SecureGerryChat = ({
           <ChatHeader language={language} onClose={onClose} />
           <div className="text-xs text-slate-400 flex items-center gap-2">
             <Shield className="w-3 h-3 text-green-400" />
-            Sesión segura: {userProfile.firstName} • {businesses.length} negocio(s)
+            Sesión segura: {userProfile.metadata?.firstName || userProfile.name} • {businesses.length} negocio(s)
           </div>
         </CardHeader>
 

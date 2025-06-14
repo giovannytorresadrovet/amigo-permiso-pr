@@ -1,6 +1,8 @@
-
 import { db } from '@/lib/db';
 import { UserProfile } from '@/types/user';
+
+// Re-export UserProfile for components that import it from here
+export type { UserProfile } from '@/types/user';
 
 export interface BusinessSummary {
   id: string;

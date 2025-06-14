@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -49,8 +48,8 @@ export const GerryAIAssistant = ({
         const welcomeMessage: Message = {
           id: 'welcome-personalized',
           text: language === 'es' 
-            ? `¡Hola ${userProfile.firstName}! 👋 He revisado tus negocios y veo que tienes ${businesses.length} negocio(s) registrado(s). ${urgentActions.length > 0 ? `⚠️ Tienes ${urgentActions.length} acción(es) urgente(s) pendiente(s).` : '✅ Todo parece estar al día.'} ¿En qué puedo ayudarte hoy?`
-            : `Hello ${userProfile.firstName}! 👋 I've reviewed your businesses and see you have ${businesses.length} registered business(es). ${urgentActions.length > 0 ? `⚠️ You have ${urgentActions.length} urgent action(s) pending.` : '✅ Everything seems up to date.'} How can I help you today?`,
+            ? `¡Hola ${userProfile.metadata?.firstName || userProfile.name}! 👋 He revisado tus negocios y veo que tienes ${businesses.length} negocio(s) registrado(s). ${urgentActions.length > 0 ? `⚠️ Tienes ${urgentActions.length} acción(es) urgente(s) pendiente(s).` : '✅ Todo parece estar al día.'} ¿En qué puedo ayudarte hoy?`
+            : `Hello ${userProfile.metadata?.firstName || userProfile.name}! 👋 I've reviewed your businesses and see you have ${businesses.length} registered business(es). ${urgentActions.length > 0 ? `⚠️ You have ${urgentActions.length} urgent action(s) pending.` : '✅ Everything seems up to date.'} How can I help you today?`,
           sender: 'gerry',
           timestamp: new Date(),
           type: 'text',
@@ -153,7 +152,7 @@ export const GerryAIAssistant = ({
           <ChatHeader language={language} onClose={() => setIsExpanded(false)} />
           {userContext?.userProfile && (
             <div className="text-xs text-slate-400">
-              Conectado como {userContext.userProfile.firstName} • {userContext.businesses?.length || 0} negocio(s)
+              Conectado como {userContext.userProfile.metadata?.firstName || userContext.userProfile.name} • {userContext.businesses?.length || 0} negocio(s)
             </div>
           )}
         </CardHeader>
