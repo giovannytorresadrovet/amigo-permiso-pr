@@ -1,11 +1,13 @@
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, ArrowRight, Building2, MapPin, FileText, CheckCircle } from 'lucide-react';
-import { AddressValidator } from './AddressValidator';
+import { Card, CardContent } from '@/components/ui/card';
 import { useOfflineStorage } from '@/hooks/useOfflineStorage';
+import { BusinessWizardStep1 } from './BusinessWizardStep1';
+import { BusinessWizardStep2 } from './BusinessWizardStep2';
+import { BusinessWizardStep3 } from './BusinessWizardStep3';
+import { BusinessWizardStep4 } from './BusinessWizardStep4';
+import { BusinessWizardNavigation } from './BusinessWizardNavigation';
+import { BusinessWizardHeader } from './BusinessWizardHeader';
 
 interface EnhancedBusinessWizardProps {
   language: 'es' | 'en';
@@ -114,6 +116,10 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
     }
   };
 
+  const handleDataChange = (newData: any) => {
+    setBusinessData(prev => ({ ...prev, ...newData }));
+  };
+
   const handleAddressValidated = (address: any, zoningInfo: any) => {
     setBusinessData(prev => ({ ...prev, address, zoningInfo }));
     handleNext();
@@ -141,102 +147,49 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
     }
   };
 
+  const canProceed = () => {
+    switch (currentStep) {
+      case 0:
+        return businessData.name && businessData.businessType;
+      case 2:
+        return businessData.employees && businessData.revenue;
+      default:
+        return true;
+    }
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 0:
         return (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">{t.businessName}</label>
-              <input
-                type="text"
-                value={businessData.name}
-                onChange={(e) => setBusinessData(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-lg"
-                placeholder="Mi Empresa"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">{t.businessType}</label>
-              <select
-                value={businessData.businessType}
-                onChange={(e) => setBusinessData(prev => ({ ...prev, businessType: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-lg"
-              >
-                <option value="">Seleccionar tipo</option>
-                {Object.entries(t.businessTypes).map(([key, value]) => (
-                  <option key={key} value={key}>{value}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">{t.description}</label>
-              <textarea
-                value={businessData.description}
-                onChange={(e) => setBusinessData(prev => ({ ...prev, description: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-lg"
-                rows={3}
-                placeholder="Describe tu negocio..."
-              />
-            </div>
-          </div>
+          <BusinessWizardStep1
+            businessData={businessData}
+            onDataChange={handleDataChange}
+            translations={t}
+          />
         );
-
       case 1:
         return (
-          <AddressValidator
+          <BusinessWizardStep2
             onAddressValidated={handleAddressValidated}
             language={language}
           />
         );
-
       case 2:
         return (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">{t.employees}</label>
-              <select
-                value={businessData.employees}
-                onChange={(e) => setBusinessData(prev => ({ ...prev, employees: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-lg"
-              >
-                {Object.entries(t.employeeRanges).map(([key, value]) => (
-                  <option key={key} value={key}>{value}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">{t.revenue}</label>
-              <select
-                value={businessData.revenue}
-                onChange={(e) => setBusinessData(prev => ({ ...prev, revenue: e.target.value }))}
-                className="w-full p-3 border border-gray-300 rounded-lg"
-              >
-                {Object.entries(t.revenueRanges).map(([key, value]) => (
-                  <option key={key} value={key}>{value}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <BusinessWizardStep3
+            businessData={businessData}
+            onDataChange={handleDataChange}
+            translations={t}
+          />
         );
-
       case 3:
         return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">¡Configuración Completa!</h3>
-              <p className="text-gray-600">Revisa la información de tu negocio</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-              <p><strong>Negocio:</strong> {businessData.name}</p>
-              <p><strong>Tipo:</strong> {t.businessTypes[businessData.businessType as keyof typeof t.businessTypes]}</p>
-              <p><strong>Ubicación:</strong> {businessData.address?.street}, {businessData.address?.city}</p>
-              <p><strong>Empleados:</strong> {t.employeeRanges[businessData.employees as keyof typeof t.employeeRanges]}</p>
-            </div>
-          </div>
+          <BusinessWizardStep4
+            businessData={businessData}
+            translations={t}
+          />
         );
-
       default:
         return null;
     }
@@ -245,66 +198,28 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
       <div className="max-w-4xl mx-auto">
-        <Button 
-          variant="ghost" 
-          onClick={onBack}
-          className="text-slate-300 hover:text-white mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver
-        </Button>
-
         <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Building2 className="w-6 h-6 mr-2" />
-              {t.title}
-            </CardTitle>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm text-slate-400">
-                <span>Paso {currentStep + 1} de {steps.length}</span>
-                <span>{steps[currentStep]}</span>
-              </div>
-              <Progress value={progress} className="h-2" />
-            </div>
-          </CardHeader>
+          <BusinessWizardHeader
+            onBack={onBack}
+            title={t.title}
+            currentStep={currentStep}
+            steps={steps}
+            progress={progress}
+          />
+          
           <CardContent className="text-white">
             {renderStep()}
             
             {currentStep !== 1 && (
-              <div className="flex justify-between mt-6">
-                <Button
-                  variant="outline"
-                  onClick={handleBack}
-                  disabled={currentStep === 0}
-                  className="border-slate-600 text-slate-300 hover:bg-slate-700"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  {t.back}
-                </Button>
-                
-                {currentStep === steps.length - 1 ? (
-                  <Button
-                    onClick={handleComplete}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    {t.complete}
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleNext}
-                    disabled={
-                      (currentStep === 0 && (!businessData.name || !businessData.businessType)) ||
-                      (currentStep === 2 && (!businessData.employees || !businessData.revenue))
-                    }
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    {t.next}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                )}
-              </div>
+              <BusinessWizardNavigation
+                currentStep={currentStep}
+                totalSteps={steps.length}
+                onBack={handleBack}
+                onNext={handleNext}
+                onComplete={handleComplete}
+                canProceed={canProceed()}
+                translations={t}
+              />
             )}
           </CardContent>
         </Card>
