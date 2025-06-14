@@ -1,15 +1,6 @@
-import { db } from '@/lib/db';
 
-export interface UserProfile {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
-  verified: boolean;
-  preferredLanguage: 'es' | 'en';
-  municipality?: string;
-}
+import { db } from '@/lib/db';
+import { UserProfile } from '@/types/user';
 
 export interface BusinessSummary {
   id: string;
@@ -57,12 +48,29 @@ export class UserDataService {
     return {
       id: 'user-123',
       email: 'maria.gonzalez@email.com',
-      firstName: 'María',
-      lastName: 'González',
-      phone: '787-555-0123',
-      verified: true,
-      preferredLanguage: 'es',
-      municipality: 'Toa Baja'
+      name: 'María González',
+      avatar: undefined,
+      role: 'user',
+      permissions: ['read:businesses', 'create:businesses'],
+      businessIds: ['1', '2'],
+      createdAt: new Date(),
+      lastLoginAt: new Date(),
+      isEmailVerified: true,
+      preferences: {
+        language: 'es',
+        theme: 'light',
+        notifications: {
+          email: true,
+          push: true,
+          sms: false
+        }
+      },
+      metadata: {
+        firstName: 'María',
+        lastName: 'González',
+        phone: '787-555-0123',
+        municipality: 'Toa Baja'
+      }
     };
   }
 

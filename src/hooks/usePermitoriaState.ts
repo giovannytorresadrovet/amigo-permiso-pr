@@ -96,6 +96,7 @@ export const usePermitoriaState = () => {
       identityVerified: false, // Start with no identity verification
       role: 'guest', // Start as guest
       verificationStatus: 'pending',
+      preferredLanguage: 'es', // Add missing preferredLanguage property
       createdAt: new Date(),
       lastLogin: new Date()
     };
