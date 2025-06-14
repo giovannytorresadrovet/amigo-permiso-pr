@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -7,9 +6,9 @@ import * as z from 'zod';
 import { Shield, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -21,6 +20,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { notifySuccess, notifyError } = useNotificationEffects();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -33,10 +33,37 @@ const Login = () => {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     console.log('Login attempt:', data);
-    // TODO: Implement actual login logic
-    setTimeout(() => {
+    
+    // Simulate login process
+    try {
+      // TODO: Replace with actual authentication logic
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Simulate success/failure randomly for demo
+      const success = Math.random() > 0.3;
+      
+      if (success) {
+        notifySuccess(
+          'Login Successful',
+          'Welcome back! You have been successfully logged in.',
+          false
+        );
+      } else {
+        notifyError(
+          'Login Failed',
+          'Invalid email or password. Please check your credentials and try again.',
+          true
+        );
+      }
+    } catch (error) {
+      notifyError(
+        'Login Error',
+        'An unexpected error occurred. Please try again later.',
+        true
+      );
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   return (

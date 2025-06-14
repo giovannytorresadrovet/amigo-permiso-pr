@@ -9,6 +9,7 @@ import { TrustMetrics } from '@/components/TrustMetrics';
 import { FeatureCards } from '@/components/FeatureCards';
 import { AdditionalFeatures } from '@/components/AdditionalFeatures';
 import { BackgroundElements } from '@/components/BackgroundElements';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 
 const Index = () => {
   const [currentLanguage, setCurrentLanguage] = useState<'es' | 'en'>('es');
@@ -96,7 +97,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <AppHeader currentLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} />
+      <div className="flex justify-between items-center p-4">
+        <AppHeader currentLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} />
+        <div className="flex items-center gap-4">
+          <NotificationBell />
+        </div>
+      </div>
 
       <main className="relative z-10 px-6 pb-16">
         <HeroSection 

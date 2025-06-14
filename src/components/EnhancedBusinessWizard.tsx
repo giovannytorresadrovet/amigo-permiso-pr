@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { BusinessWizardHeader } from './BusinessWizardHeader';
@@ -7,6 +6,7 @@ import { BusinessWizardStep2 } from './BusinessWizardStep2';
 import { BusinessWizardStep3 } from './BusinessWizardStep3';
 import { BusinessWizardStep4 } from './BusinessWizardStep4';
 import { BusinessWizardNavigation } from './BusinessWizardNavigation';
+import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
 interface EnhancedBusinessWizardProps {
   language: 'es' | 'en';
@@ -25,6 +25,7 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
     revenue: 'under50k'
   });
   const [zoningInfo, setZoningInfo] = useState(null);
+  const { notifySuccess, notifyError, notifyInfo } = useNotificationEffects();
 
   const translations = {
     es: {
@@ -106,8 +107,49 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
   const handleNext = () => {
     if (currentStep < 3) {
       setCurrentStep(prev => prev + 1);
+      
+      // Show step completion notifications
+      if (currentStep === 0) {
+        notifySuccess(
+          language === 'es' ? 'Información Básica Completada' : 'Basic Information Completed',
+          language === 'es' 
+            ? 'Datos del negocio guardados exitosamente.' 
+            : 'Business information saved successfully.'
+        );
+      } else if (currentStep === 1) {
+        notifySuccess(
+          language === 'es' ? 'Ubicación Validada' : 'Location Validated',
+          language === 'es' 
+            ? 'Dirección verificada y información de zonificación obtenida.' 
+            : 'Address verified and zoning information obtained.'
+        );
+      } else if (currentStep === 2) {
+        notifyInfo(
+          language === 'es' ? 'Revisión Final' : 'Final Review',
+          language === 'es' 
+            ? 'Revisa toda la información antes de completar.' 
+            : 'Review all information before completing.'
+        );
+      }
     } else {
-      onComplete({ ...businessData, zoningInfo });
+      try {
+        const completeData = { ...businessData, zoningInfo };
+        onComplete(completeData);
+        notifySuccess(
+          language === 'es' ? '¡Configuración Completada!' : 'Setup Completed!',
+          language === 'es' 
+            ? 'Tu perfil de negocio ha sido configurado exitosamente.' 
+            : 'Your business profile has been set up successfully.',
+          true
+        );
+      } catch (error) {
+        notifyError(
+          language === 'es' ? 'Error al Completar' : 'Completion Error',
+          language === 'es' 
+            ? 'Hubo un problema al guardar la configuración.' 
+            : 'There was a problem saving the setup.'
+        );
+      }
     }
   };
 
@@ -126,6 +168,16 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
   const handleAddressValidated = (address: any, zoning: any) => {
     setBusinessData(prev => ({ ...prev, address }));
     setZoningInfo(zoning);
+    
+    if (zoning?.warnings?.length > 0) {
+      notifyError(
+        language === 'es' ? 'Advertencias de Zonificación' : 'Zoning Warnings',
+        language === 'es' 
+          ? 'Se encontraron posibles problemas de zonificación.' 
+          : 'Potential zoning issues were found.',
+        true
+      );
+    }
   };
 
   const canProceed = () => {

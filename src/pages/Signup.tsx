@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -10,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
 const signupSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -31,6 +31,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { notifySuccess, notifyError, notifyWarning } = useNotificationEffects();
 
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -47,10 +48,41 @@ const Signup = () => {
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
     console.log('Signup attempt:', data);
-    // TODO: Implement actual signup logic
-    setTimeout(() => {
+    
+    try {
+      // TODO: Replace with actual signup logic
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Simulate success/failure for demo
+      const success = Math.random() > 0.2;
+      
+      if (success) {
+        notifySuccess(
+          'Account Created Successfully',
+          `Welcome ${data.firstName}! Your account has been created. Please check your email to verify your account.`,
+          true
+        );
+        notifyWarning(
+          'Email Verification Required',
+          'Please check your email and click the verification link to activate your account.',
+          true
+        );
+      } else {
+        notifyError(
+          'Signup Failed',
+          'Email address is already registered. Please try a different email or sign in instead.',
+          true
+        );
+      }
+    } catch (error) {
+      notifyError(
+        'Signup Error',
+        'An unexpected error occurred during account creation. Please try again.',
+        true
+      );
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   return (
