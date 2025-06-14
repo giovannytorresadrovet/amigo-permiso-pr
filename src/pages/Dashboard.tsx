@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
@@ -11,7 +10,7 @@ import { BusinessSetupWizard } from '@/components/dashboard/BusinessSetupWizard'
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
 import { ProfileSettings } from '@/components/dashboard/ProfileSettings';
-import { AIChatBubble } from '@/components/AIChatBubble';
+import { GerryAIAssistant } from '@/components/ai/GerryAIAssistant';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
@@ -98,7 +97,16 @@ const Dashboard = () => {
             {renderContent()}
           </main>
         </div>
-        <AIChatBubble />
+        <GerryAIAssistant 
+          language={language}
+          businessContext={selectedBusinessId ? {
+            businessId: selectedBusinessId,
+            name: 'Current Business',
+            type: 'Business',
+            municipality: 'Puerto Rico',
+            status: 'active'
+          } : undefined}
+        />
       </div>
     </SidebarProvider>
   );
