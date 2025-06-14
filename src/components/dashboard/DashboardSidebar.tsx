@@ -35,11 +35,8 @@ export const DashboardSidebar = ({ currentView, onViewChange, language, onLangua
       
       <div className="px-4">
         <VerificationStatus
-          user={user}
-          hasAccess={businessCreationAccess.hasAccess}
           language={language}
-          isLoading={isLoading}
-          onStartVerification={handleStartVerification}
+          showActions={true}
         />
       </div>
 
