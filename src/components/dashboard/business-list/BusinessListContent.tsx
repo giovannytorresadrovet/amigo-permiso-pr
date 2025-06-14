@@ -2,11 +2,11 @@
 import { BusinessGrid } from '../BusinessGrid';
 import { BusinessListEmptyState } from '../BusinessListEmptyState';
 import { BusinessCreationGuard } from '@/components/business/BusinessCreationGuard';
-import { Business } from '@/types/business';
+import { MockBusiness } from '@/data/mockBusinesses';
 
 interface BusinessListContentProps {
   hasAccess: boolean;
-  filteredBusinesses: Business[];
+  filteredBusinesses: MockBusiness[];
   hasFilters: boolean;
   onBusinessSelect: (businessId: string) => void;
   onNewBusiness: () => void;
