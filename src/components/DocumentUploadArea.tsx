@@ -1,12 +1,12 @@
 
 import { useState, useCallback } from 'react';
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { DocumentItem, DocumentTranslations } from "@/types/document";
 import { DocumentProgress } from "./DocumentProgress";
 import { DocumentUploadZone } from "./DocumentUploadZone";
-import { DocumentCard } from "./DocumentCard";
+import { DocumentHeader } from "./DocumentHeader";
+import { DocumentTitle } from "./DocumentTitle";
+import { DocumentList } from "./DocumentList";
+import { DocumentActionButton } from "./DocumentActionButton";
 
 interface DocumentUploadAreaProps {
   language: 'es' | 'en';
@@ -141,35 +141,17 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={onBack}
-            className="text-slate-300 hover:text-white"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver al Inicio
-          </Button>
-          <Badge variant="secondary" className="bg-teal-500/20 text-teal-300">
-            {completedDocs}/{totalDocs} {t.complete}
-          </Badge>
-        </div>
+        <DocumentHeader 
+          onBack={onBack}
+          completedDocs={completedDocs}
+          totalDocs={totalDocs}
+          translations={t}
+        />
 
-        {/* Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            {t.title}
-          </h1>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            {t.subtitle}
-          </p>
-        </div>
+        <DocumentTitle translations={t} />
 
-        {/* Progress */}
         <DocumentProgress documents={documents} translations={t} />
 
-        {/* Upload Area */}
         <DocumentUploadZone
           dragActive={dragActive}
           onDragEnter={handleDrag}
@@ -180,25 +162,9 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
           translations={t}
         />
 
-        {/* Document List */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {documents.map((doc) => (
-            <DocumentCard key={doc.id} document={doc} translations={t} />
-          ))}
-        </div>
+        <DocumentList documents={documents} translations={t} />
 
-        {/* Action Button */}
-        {completedDocs === totalDocs && (
-          <div className="text-center mt-8">
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-2xl"
-            >
-              Generar Reporte de Cumplimiento
-              <CheckCircle className="ml-2 w-5 h-5" />
-            </Button>
-          </div>
-        )}
+        <DocumentActionButton isVisible={completedDocs === totalDocs} />
       </div>
     </div>
   );
