@@ -1,4 +1,3 @@
-
 // Comprehensive Spanish translations based on the documentation
 export const translations = {
   es: {
@@ -24,19 +23,79 @@ export const translations = {
     orContinueWithEmail: 'O continúa con correo electrónico',
     orCreateAccountWithEmail: 'O crea cuenta con correo electrónico',
     
-    // Business Management
-    myBusinesses: 'Mis Negocios',
-    manageBusinesses: 'Administra tus negocios y sus permisos',
-    newBusiness: 'Nuevo Negocio',
-    businessName: 'Nombre del Negocio',
-    businessType: 'Tipo de Negocio',
-    description: 'Descripción',
-    address: 'Dirección',
-    municipality: 'Municipio',
-    zipCode: 'Código Postal',
-    phone: 'Teléfono',
+    // Business Status & Legal Compliance
+    legalStatus: 'Estatus Legal',
+    legalStatusDescription: 'Estado actual de cumplimiento legal',
+    legal: 'Legal',
+    inProcess: 'En Proceso',
+    illegal: 'Ilegal',
+    expiringSoon: 'Expira Pronto',
+    complianceProgress: 'Progreso de Cumplimiento',
+    permitExpiration: 'Vencimiento de Permiso',
+    inspectorReadiness: 'Preparación para Inspector',
+    emergencyMode: 'Modo de Emergencia',
     
-    // Business Types
+    // Permit Management
+    permisoUnico: 'Permiso Único',
+    permitNumber: 'Número de Permiso',
+    applicationStatus: 'Estado de Solicitud',
+    submissionDate: 'Fecha de Envío',
+    approvalDate: 'Fecha de Aprobación',
+    expirationDate: 'Fecha de Vencimiento',
+    renewalRequired: 'Renovación Requerida',
+    documentsRequired: 'Documentos Requeridos',
+    inspectionScheduled: 'Inspección Programada',
+    
+    // Emergency Mode
+    inspectorAtDoor: 'Inspector en Puerta',
+    emergencyAssistance: 'Asistencia de Emergencia',
+    quickPDF: 'PDF Rápido',
+    emergencyContacts: 'Contactos de Emergencia',
+    communicationScripts: 'Guiones de Comunicación',
+    whatToSayInspector: 'Qué Decir al Inspector',
+    delayTactics: 'Tácticas de Demora',
+    cooperationScript: 'Guión de Cooperación',
+    callSupport: 'Llamar Soporte',
+    callMunicipality: 'Llamar Municipio',
+    shareWhatsApp: 'Compartir por WhatsApp',
+    shareEmail: 'Compartir por Email',
+    visitNotes: 'Notas de Visita',
+    
+    // AI Assistant (Gerry)
+    gerryAssistant: 'Asistente Gerry',
+    askGerry: 'Pregúntale a Gerry',
+    aiGuidance: 'Orientación con IA',
+    formAutofill: 'Autocompletado de Formularios',
+    regulationExpert: 'Experto en Regulaciones',
+    chatWithGerry: 'Chatear con Gerry',
+    gerryRecommends: 'Gerry Recomienda',
+    complianceReminder: 'Recordatorio de Cumplimiento',
+    
+    // Identity Verification
+    identityVerification: 'Verificación de Identidad',
+    verifyWithIdMe: 'Verificar con ID.me',
+    identityRequired: 'Verificación de Identidad Requerida',
+    secureProcess: 'Proceso Seguro',
+    verificationComplete: 'Verificación Completa',
+    verificationFailed: 'Verificación Fallida',
+    
+    // Document Management Enhanced
+    documentSecurity: 'Seguridad de Documentos',
+    encryptedStorage: 'Almacenamiento Encriptado',
+    offlineAccess: 'Acceso Sin Conexión',
+    autoSync: 'Sincronización Automática',
+    documentValidation: 'Validación de Documentos',
+    qualityCheck: 'Verificación de Calidad',
+    
+    // Subscription & Payments
+    municipalityBasedPricing: 'Precio Basado en Municipio',
+    ivuTaxIncluded: 'IVU Incluido',
+    monthlyBilling: 'Facturación Mensual',
+    annualBilling: 'Facturación Anual',
+    proRatedRefund: 'Reembolso Prorrateado',
+    subscriptionTier: 'Nivel de Suscripción',
+    
+    // Enhanced Business Types
     businessTypes: {
       restaurant: 'Restaurante',
       salon: 'Salón de Belleza',
@@ -49,7 +108,11 @@ export const translations = {
       healthcare: 'Servicios de Salud',
       education: 'Educación',
       construction: 'Construcción',
-      transportation: 'Transporte'
+      transportation: 'Transporte',
+      agriculture: 'Agricultura',
+      tourism: 'Turismo',
+      automotive: 'Automotriz',
+      entertainment: 'Entretenimiento'
     },
     
     // Puerto Rico specific
@@ -61,7 +124,6 @@ export const translations = {
     
     // Permits and legal status
     permits: 'Permisos',
-    legalStatus: 'Estatus Legal',
     active: 'Activo',
     pending: 'Pendiente',
     inactive: 'Inactivo',
@@ -117,19 +179,79 @@ export const translations = {
     orContinueWithEmail: 'Or continue with email',
     orCreateAccountWithEmail: 'Or create account with email',
     
-    // Business Management
-    myBusinesses: 'My Businesses',
-    manageBusinesses: 'Manage your businesses and their permits',
-    newBusiness: 'New Business',
-    businessName: 'Business Name',
-    businessType: 'Business Type',
-    description: 'Description',
-    address: 'Address',
-    municipality: 'Municipality',
-    zipCode: 'ZIP Code',
-    phone: 'Phone',
+    // Business Status & Legal Compliance
+    legalStatus: 'Legal Status',
+    legalStatusDescription: 'Current legal compliance status',
+    legal: 'Legal',
+    inProcess: 'In Process',
+    illegal: 'Illegal',
+    expiringSoon: 'Expiring Soon',
+    complianceProgress: 'Compliance Progress',
+    permitExpiration: 'Permit Expiration',
+    inspectorReadiness: 'Inspector Readiness',
+    emergencyMode: 'Emergency Mode',
     
-    // Business Types
+    // Permit Management
+    permisoUnico: 'Unique Permit',
+    permitNumber: 'Permit Number',
+    applicationStatus: 'Application Status',
+    submissionDate: 'Submission Date',
+    approvalDate: 'Approval Date',
+    expirationDate: 'Expiration Date',
+    renewalRequired: 'Renewal Required',
+    documentsRequired: 'Documents Required',
+    inspectionScheduled: 'Inspection Scheduled',
+    
+    // Emergency Mode
+    inspectorAtDoor: 'Inspector at Door',
+    emergencyAssistance: 'Emergency Assistance',
+    quickPDF: 'Quick PDF',
+    emergencyContacts: 'Emergency Contacts',
+    communicationScripts: 'Communication Scripts',
+    whatToSayInspector: 'What to Say to Inspector',
+    delayTactics: 'Delay Tactics',
+    cooperationScript: 'Cooperation Script',
+    callSupport: 'Call Support',
+    callMunicipality: 'Call Municipality',
+    shareWhatsApp: 'Share via WhatsApp',
+    shareEmail: 'Share via Email',
+    visitNotes: 'Visit Notes',
+    
+    // AI Assistant (Gerry)
+    gerryAssistant: 'Gerry Assistant',
+    askGerry: 'Ask Gerry',
+    aiGuidance: 'AI Guidance',
+    formAutofill: 'Form Autofill',
+    regulationExpert: 'Regulation Expert',
+    chatWithGerry: 'Chat with Gerry',
+    gerryRecommends: 'Gerry Recommends',
+    complianceReminder: 'Compliance Reminder',
+    
+    // Identity Verification
+    identityVerification: 'Identity Verification',
+    verifyWithIdMe: 'Verify with ID.me',
+    identityRequired: 'Identity Verification Required',
+    secureProcess: 'Secure Process',
+    verificationComplete: 'Verification Complete',
+    verificationFailed: 'Verification Failed',
+    
+    // Document Management Enhanced
+    documentSecurity: 'Document Security',
+    encryptedStorage: 'Encrypted Storage',
+    offlineAccess: 'Offline Access',
+    autoSync: 'Auto Sync',
+    documentValidation: 'Document Validation',
+    qualityCheck: 'Quality Check',
+    
+    // Subscription & Payments
+    municipalityBasedPricing: 'Municipality-Based Pricing',
+    ivuTaxIncluded: 'IVU Tax Included',
+    monthlyBilling: 'Monthly Billing',
+    annualBilling: 'Annual Billing',
+    proRatedRefund: 'Pro-rated Refund',
+    subscriptionTier: 'Subscription Tier',
+    
+    // Enhanced Business Types
     businessTypes: {
       restaurant: 'Restaurant',
       salon: 'Beauty Salon',
@@ -142,7 +264,11 @@ export const translations = {
       healthcare: 'Healthcare',
       education: 'Education',
       construction: 'Construction',
-      transportation: 'Transportation'
+      transportation: 'Transportation',
+      agriculture: 'Agriculture',
+      tourism: 'Tourism',
+      automotive: 'Automotive',
+      entertainment: 'Entertainment'
     },
     
     // Puerto Rico specific
@@ -154,7 +280,6 @@ export const translations = {
     
     // Permits and legal status
     permits: 'Permits',
-    legalStatus: 'Legal Status',
     active: 'Active',
     pending: 'Pending',
     inactive: 'Inactive',
