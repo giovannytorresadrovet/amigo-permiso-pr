@@ -1,6 +1,6 @@
-
 import { FileText, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 import { MetricCard } from '@/components/ui/metric-card';
+import { PageTransition } from '@/components/ui/page-transition';
 
 const stats = [
   {
@@ -52,16 +52,17 @@ const stats = [
 export const OverviewStats = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {stats.map((stat) => (
-        <MetricCard
-          key={stat.title}
-          title={stat.title}
-          value={stat.value}
-          change={stat.change}
-          icon={stat.icon}
-          variant={stat.variant}
-          className="animate-fade-in-up"
-        />
+      {stats.map((stat, index) => (
+        <PageTransition key={stat.title} delay={index * 100}>
+          <MetricCard
+            title={stat.title}
+            value={stat.value}
+            change={stat.change}
+            icon={stat.icon}
+            variant={stat.variant}
+            className="hover:scale-105 transition-transform duration-200"
+          />
+        </PageTransition>
       ))}
     </div>
   );
