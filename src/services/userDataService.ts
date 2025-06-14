@@ -1,4 +1,3 @@
-
 import { db } from '@/lib/db';
 
 export interface UserProfile {
@@ -23,6 +22,10 @@ export interface BusinessSummary {
   documentsCount: number;
   completionPercentage: number;
   urgentActions: number;
+  businessType?: string;
+  industry?: string;
+  employeeCount?: number;
+  complianceRequirements?: string[];
 }
 
 export interface PermitInfo {
