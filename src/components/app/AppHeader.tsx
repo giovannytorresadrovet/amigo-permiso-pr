@@ -1,7 +1,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Bell, LogOut } from 'lucide-react';
+import { Bell, LogOut, ShieldCheck, Shield, AlertTriangle } from 'lucide-react';
+import { useUserManagement } from '@/contexts/UserManagementContext';
 
 interface User {
   id: string;
@@ -9,6 +10,8 @@ interface User {
   firstName: string;
   lastName: string;
   verified: boolean;
+  identityVerified: boolean;
+  verificationStatus: 'pending' | 'in_progress' | 'verified' | 'failed';
 }
 
 interface AppHeaderProps {
@@ -26,6 +29,44 @@ export const AppHeader = ({
   onLogout, 
   urgentNotifications 
 }: AppHeaderProps) => {
+  const { businessCreationAccess } = useUserManagement();
+
+  const getVerificationBadge = () => {
+    if (user.identityVerified && user.verificationStatus === 'verified') {
+      return (
+        <Badge className="bg-green-100 text-green-800 border-green-200 flex items-center gap-1">
+          <ShieldCheck className="w-3 h-3" />
+          {language === 'es' ? 'Verificado' : 'Verified'}
+        </Badge>
+      );
+    }
+
+    if (user.verificationStatus === 'failed') {
+      return (
+        <Badge className="bg-red-100 text-red-800 border-red-200 flex items-center gap-1">
+          <AlertTriangle className="w-3 h-3" />
+          {language === 'es' ? 'Verificación Fallida' : 'Verification Failed'}
+        </Badge>
+      );
+    }
+
+    if (user.verificationStatus === 'in_progress') {
+      return (
+        <Badge className="bg-blue-100 text-blue-800 border-blue-200 flex items-center gap-1">
+          <Shield className="w-3 h-3" />
+          {language === 'es' ? 'En Proceso' : 'In Progress'}
+        </Badge>
+      );
+    }
+
+    return (
+      <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 flex items-center gap-1">
+        <Shield className="w-3 h-3" />
+        {language === 'es' ? 'Sin Verificar' : 'Unverified'}
+      </Badge>
+    );
+  };
+
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,11 +98,19 @@ export const AppHeader = ({
               {language === 'es' ? '🇺🇸 EN' : '🇵🇷 ES'}
             </Button>
             
-            {/* User Menu */}
+            {/* User Menu with Verification Status */}
             <div className="flex items-center space-x-3">
               <div className="text-sm">
-                <p className="font-medium text-gray-900">{user.firstName} {user.lastName}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-gray-900">{user.firstName} {user.lastName}</p>
+                  {getVerificationBadge()}
+                </div>
                 <p className="text-gray-500">{user.email}</p>
+                {!businessCreationAccess.hasAccess && (
+                  <p className="text-xs text-yellow-600">
+                    {language === 'es' ? 'Verificación requerida para crear negocios' : 'Verification required to create businesses'}
+                  </p>
+                )}
               </div>
               <Button variant="ghost" size="sm" onClick={onLogout}>
                 <LogOut className="w-4 h-4" />

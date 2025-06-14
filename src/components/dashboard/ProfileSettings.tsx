@@ -8,9 +8,11 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { User, Mail, Phone, Bell, Shield, Globe, Save, ArrowLeft, MapPin } from 'lucide-react';
+import { User, Mail, Phone, Bell, Shield, Globe, Save, ArrowLeft, MapPin, ShieldCheck, AlertTriangle, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useUserManagement } from '@/contexts/UserManagementContext';
+import { VerificationStatus } from '@/components/verification/VerificationStatus';
 
 interface ProfileSettingsProps {
   onBack?: () => void;
@@ -33,6 +35,7 @@ const municipalities = [
 ];
 
 export const ProfileSettings = ({ onBack }: ProfileSettingsProps) => {
+  const { user, businessCreationAccess, startVerification, isLoading } = useUserManagement();
   const [profile, setProfile] = useState({
     firstName: 'John',
     lastName: 'Doe',
@@ -78,6 +81,15 @@ export const ProfileSettings = ({ onBack }: ProfileSettingsProps) => {
     });
   };
 
+  const handleStartVerification = async () => {
+    try {
+      const verificationUrl = await startVerification();
+      window.location.href = verificationUrl;
+    } catch (error) {
+      console.error('Failed to start verification:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 sm:p-6">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -97,6 +109,9 @@ export const ProfileSettings = ({ onBack }: ProfileSettingsProps) => {
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">Configuración del Perfil</h1>
           <p className="text-slate-600 mt-2">Administra tu información personal y preferencias</p>
         </div>
+
+        {/* Identity Verification Status */}
+        <VerificationStatus language="es" showActions={true} />
 
         {/* Profile Information */}
         <Card>
@@ -208,6 +223,54 @@ export const ProfileSettings = ({ onBack }: ProfileSettingsProps) => {
                 rows={3}
                 className="resize-none"
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Business Access Status */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center text-lg sm:text-xl">
+              <Shield className="w-5 h-5 mr-2" />
+              Acceso a Funciones de Negocio
+            </CardTitle>
+            <CardDescription>
+              Estado de verificación y permisos para crear negocios
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center space-x-3">
+                {businessCreationAccess.hasAccess ? (
+                  <ShieldCheck className="w-6 h-6 text-green-500" />
+                ) : (
+                  <Shield className="w-6 h-6 text-yellow-500" />
+                )}
+                <div>
+                  <p className="font-medium">
+                    {businessCreationAccess.hasAccess 
+                      ? 'Acceso Completo Habilitado' 
+                      : 'Verificación Requerida'
+                    }
+                  </p>
+                  <p className="text-sm text-slate-600">
+                    {businessCreationAccess.hasAccess 
+                      ? 'Puedes crear y gestionar negocios sin restricciones.'
+                      : 'Necesitas verificar tu identidad para crear negocios.'
+                    }
+                  </p>
+                </div>
+              </div>
+              {!businessCreationAccess.hasAccess && (
+                <Button 
+                  onClick={handleStartVerification}
+                  disabled={isLoading}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Verificar Identidad
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>

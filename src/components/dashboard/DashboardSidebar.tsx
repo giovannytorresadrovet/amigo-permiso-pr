@@ -1,5 +1,5 @@
 
-import { Shield, LayoutDashboard, FileText, Upload, User, Settings, LogOut, Building, Briefcase, Brain, Globe } from 'lucide-react';
+import { Shield, LayoutDashboard, FileText, Upload, User, Settings, LogOut, Building, Briefcase, Brain, Globe, ShieldCheck, AlertTriangle } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useUserManagement } from '@/contexts/UserManagementContext';
 
 interface DashboardSidebarProps {
   currentView: string;
@@ -63,7 +65,37 @@ const getMenuItems = (language: 'es' | 'en') => [
 ];
 
 export const DashboardSidebar = ({ currentView, onViewChange, language, onLanguageChange }: DashboardSidebarProps) => {
+  const { user, businessCreationAccess, startVerification, isLoading } = useUserManagement();
   const menuItems = getMenuItems(language);
+
+  const getVerificationIcon = () => {
+    if (user?.identityVerified && user?.verificationStatus === 'verified') {
+      return <ShieldCheck className="w-4 h-4 text-green-500" />;
+    }
+    return <Shield className="w-4 h-4 text-yellow-500" />;
+  };
+
+  const getVerificationStatus = () => {
+    if (user?.identityVerified && user?.verificationStatus === 'verified') {
+      return language === 'es' ? 'Verificado' : 'Verified';
+    }
+    if (user?.verificationStatus === 'in_progress') {
+      return language === 'es' ? 'En Proceso' : 'In Progress';
+    }
+    if (user?.verificationStatus === 'failed') {
+      return language === 'es' ? 'Fallida' : 'Failed';
+    }
+    return language === 'es' ? 'Sin Verificar' : 'Unverified';
+  };
+
+  const handleStartVerification = async () => {
+    try {
+      const verificationUrl = await startVerification();
+      window.location.href = verificationUrl;
+    } catch (error) {
+      console.error('Failed to start verification:', error);
+    }
+  };
 
   return (
     <Sidebar className="border-r border-slate-200">
@@ -85,6 +117,30 @@ export const DashboardSidebar = ({ currentView, onViewChange, language, onLangua
             {language.toUpperCase()}
           </Button>
         </div>
+
+        {/* Verification Status Section */}
+        <div className="mt-4 p-3 bg-slate-50 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            {getVerificationIcon()}
+            <span className="text-sm font-medium">
+              {language === 'es' ? 'Estado de Verificación' : 'Verification Status'}
+            </span>
+          </div>
+          <p className="text-xs text-slate-600 mb-2">
+            {getVerificationStatus()}
+          </p>
+          
+          {!businessCreationAccess.hasAccess && (
+            <Button 
+              onClick={handleStartVerification}
+              disabled={isLoading}
+              size="sm"
+              className="w-full text-xs bg-blue-600 hover:bg-blue-700"
+            >
+              {language === 'es' ? 'Verificar Identidad' : 'Verify Identity'}
+            </Button>
+          )}
+        </div>
       </SidebarHeader>
 
       <SidebarContent>
@@ -94,26 +150,50 @@ export const DashboardSidebar = ({ currentView, onViewChange, language, onLangua
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton 
-                    onClick={() => onViewChange(item.id)}
-                    isActive={currentView === item.id}
-                    className="w-full justify-start"
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span>{item.title}</span>
-                    {item.badge && (
-                      <Badge variant="secondary" className="ml-auto text-xs">
-                        {item.badge}
-                      </Badge>
-                    )}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {menuItems.map((item) => {
+                const isBusinessRelated = ['businesses', 'business-setup'].includes(item.id);
+                const isDisabled = isBusinessRelated && !businessCreationAccess.hasAccess;
+                
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton 
+                      onClick={() => onViewChange(item.id)}
+                      isActive={currentView === item.id}
+                      className={`w-full justify-start ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      disabled={isDisabled}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span>{item.title}</span>
+                      {item.badge && (
+                        <Badge variant="secondary" className="ml-auto text-xs">
+                          {item.badge}
+                        </Badge>
+                      )}
+                      {isDisabled && (
+                        <Shield className="w-3 h-3 ml-auto text-yellow-500" />
+                      )}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Verification Alert */}
+        {!businessCreationAccess.hasAccess && (
+          <div className="px-4 mt-4">
+            <Alert className="border-yellow-200 bg-yellow-50">
+              <AlertTriangle className="w-4 h-4 text-yellow-600" />
+              <AlertDescription className="text-yellow-800 text-xs">
+                {language === 'es' 
+                  ? 'Verifica tu identidad para acceder a todas las funciones.'
+                  : 'Verify your identity to access all features.'
+                }
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-slate-200 p-4">
