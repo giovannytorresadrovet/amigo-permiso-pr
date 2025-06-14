@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface WizardNavigationProps {
   currentStep: number;
@@ -27,14 +28,16 @@ export const WizardNavigation = ({
 }: WizardNavigationProps) => {
   const isLastStep = currentStep === totalSteps - 1;
   const isFirstStep = currentStep === 0;
+  const isMobile = useIsMobile();
 
   return (
-    <div className="flex justify-between mt-6">
+    <div className="flex flex-col sm:flex-row justify-between mt-6 space-y-3 sm:space-y-0 px-4 sm:px-0">
       <Button
         variant="outline"
         onClick={onBack}
         disabled={isFirstStep}
-        className="border-slate-600 text-slate-300 hover:bg-slate-700"
+        className="border-slate-600 text-slate-300 hover:bg-slate-700 w-full sm:w-auto"
+        size={isMobile ? "default" : "default"}
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
         {translations.back}
@@ -43,7 +46,8 @@ export const WizardNavigation = ({
       {isLastStep ? (
         <Button
           onClick={onComplete}
-          className="bg-green-600 hover:bg-green-700"
+          className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
+          size={isMobile ? "default" : "default"}
         >
           <CheckCircle className="w-4 h-4 mr-2" />
           {translations.complete}
@@ -52,7 +56,8 @@ export const WizardNavigation = ({
         <Button
           onClick={onNext}
           disabled={!canProceed}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+          size={isMobile ? "default" : "default"}
         >
           {translations.next}
           <ArrowRight className="w-4 h-4 ml-2" />

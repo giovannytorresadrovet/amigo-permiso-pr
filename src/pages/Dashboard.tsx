@@ -11,6 +11,7 @@ import { BusinessSetupWizard } from '@/components/dashboard/BusinessSetupWizard'
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
 import { ProfileSettings } from '@/components/dashboard/ProfileSettings';
+import { AIChatBubble } from '@/components/AIChatBubble';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
@@ -68,7 +69,7 @@ const Dashboard = () => {
       case 'ai-discovery':
         return <PermitDiscoveryAI language={language} onBack={handleBackToDashboard} />;
       case 'profile':
-        return <ProfileSettings />;
+        return <ProfileSettings onBack={handleBackToDashboard} />;
       default:
         return (
           <div className="space-y-6">
@@ -93,10 +94,11 @@ const Dashboard = () => {
         />
         <div className="flex-1 flex flex-col">
           <DashboardHeader />
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-4 sm:p-6">
             {renderContent()}
           </main>
         </div>
+        <AIChatBubble />
       </div>
     </SidebarProvider>
   );
