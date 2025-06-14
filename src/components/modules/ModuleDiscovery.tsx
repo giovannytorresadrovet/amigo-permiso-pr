@@ -6,14 +6,15 @@ import { Button } from '@/components/ui/button';
 import { ModuleDiscoveryResult, BusinessContext } from '@/types/module';
 import { ModuleDiscoveryEngine } from '@/services/moduleDiscoveryEngine';
 import { UserDataService } from '@/services/userDataService';
-import { Lightbulb, TrendingUp, Shield, Zap, RefreshCw } from 'lucide-react';
+import { Lightbulb, TrendingUp, Shield, Zap, RefreshCw, Sparkles, ArrowLeft } from 'lucide-react';
 
 interface ModuleDiscoveryProps {
   language: 'es' | 'en';
   onModuleSelect?: (moduleId: string) => void;
+  onBack?: () => void;
 }
 
-export const ModuleDiscovery = ({ language, onModuleSelect }: ModuleDiscoveryProps) => {
+export const ModuleDiscovery = ({ language, onModuleSelect, onBack }: ModuleDiscoveryProps) => {
   const [discoveryResults, setDiscoveryResults] = useState<ModuleDiscoveryResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [businessContext, setBusinessContext] = useState<BusinessContext | null>(null);
@@ -104,16 +105,27 @@ export const ModuleDiscovery = ({ language, onModuleSelect }: ModuleDiscoveryPro
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">
-            {language === 'es' ? 'Módulos Recomendados' : 'Recommended Modules'}
-          </h2>
-          <p className="text-slate-600">
-            {language === 'es' 
-              ? 'Descubre módulos personalizados para tu negocio'
-              : 'Discover personalized modules for your business'
-            }
-          </p>
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <Button variant="ghost" size="sm" onClick={onBack} className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              {language === 'es' ? 'Volver' : 'Back'}
+            </Button>
+          )}
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles className="w-6 h-6 text-blue-600" />
+              <h2 className="text-2xl font-bold">
+                {language === 'es' ? 'Módulos Inteligentes' : 'Smart Modules'}
+              </h2>
+            </div>
+            <p className="text-slate-600">
+              {language === 'es' 
+                ? 'Descubre módulos personalizados para optimizar tu negocio'
+                : 'Discover personalized modules to optimize your business'
+              }
+            </p>
+          </div>
         </div>
         <Button
           variant="outline"
@@ -130,7 +142,7 @@ export const ModuleDiscovery = ({ language, onModuleSelect }: ModuleDiscoveryPro
         <div className="text-center py-12">
           <div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-slate-600">
-            {language === 'es' ? 'Analizando tu negocio...' : 'Analyzing your business...'}
+            {language === 'es' ? 'Analizando tu negocio con IA...' : 'Analyzing your business with AI...'}
           </p>
         </div>
       ) : discoveryResults.length === 0 ? (
@@ -151,16 +163,17 @@ export const ModuleDiscovery = ({ language, onModuleSelect }: ModuleDiscoveryPro
       ) : (
         <div className="grid gap-6">
           {discoveryResults.map((result, index) => (
-            <Card key={index} className="hover:shadow-professional-lg transition-professional">
+            <Card key={index} className="hover:shadow-professional-lg transition-professional border-l-4 border-l-blue-500">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     {getPriorityIcon(result.priority)}
                     <div>
-                      <CardTitle className="text-lg">
+                      <CardTitle className="text-lg flex items-center gap-2">
                         {result.suggestedModules[0].name}
+                        <Sparkles className="w-4 h-4 text-blue-500" />
                       </CardTitle>
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                      <div className="flex items-center gap-2 text-sm text-slate-600 mt-1">
                         <Badge variant="outline">
                           {getPriorityLabel(result.priority)}
                         </Badge>
@@ -178,7 +191,7 @@ export const ModuleDiscovery = ({ language, onModuleSelect }: ModuleDiscoveryPro
                   {result.suggestedModules[0].description}
                 </p>
 
-                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
                   <div className="flex items-start gap-2">
                     <Lightbulb className="w-4 h-4 text-blue-600 mt-0.5" />
                     <div>
@@ -200,10 +213,10 @@ export const ModuleDiscovery = ({ language, onModuleSelect }: ModuleDiscoveryPro
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 pt-2">
                   <Button
                     onClick={() => onModuleSelect?.(result.suggestedModules[0].id)}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
                   >
                     <TrendingUp className="w-4 h-4" />
                     {language === 'es' ? 'Ver Detalles' : 'View Details'}

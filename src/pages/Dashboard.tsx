@@ -67,6 +67,12 @@ const Dashboard = () => {
         );
       case 'business-setup':
         return <BusinessSetupWizard onBack={handleBackToDashboard} />;
+      case 'module-discovery':
+        return (
+          <div className="space-y-6 animate-fade-in-up">
+            <ModuleDiscovery language={language} />
+          </div>
+        );
       case 'permits':
         return (
           <div className="p-6 bg-white rounded-lg shadow-professional animate-fade-in-up">

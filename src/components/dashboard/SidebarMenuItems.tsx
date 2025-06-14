@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, FileText, Upload, User, Building, Briefcase, Brain, Shield } from 'lucide-react';
+import { LayoutDashboard, FileText, Upload, User, Building, Briefcase, Brain, Shield, Lightbulb } from 'lucide-react';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -40,6 +40,12 @@ const getMenuItems = (language: 'es' | 'en'): MenuItem[] => [
     title: language === 'es' ? 'Configurar Negocio' : 'Business Setup',
     icon: Briefcase,
     badge: language === 'es' ? 'Nuevo' : 'New',
+  },
+  {
+    id: 'module-discovery',
+    title: language === 'es' ? 'Módulos Inteligentes' : 'Smart Modules',
+    icon: Lightbulb,
+    badge: language === 'es' ? 'IA' : 'AI',
   },
   {
     id: 'permits',
