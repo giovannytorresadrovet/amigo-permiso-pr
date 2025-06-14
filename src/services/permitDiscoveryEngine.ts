@@ -1,4 +1,3 @@
-
 import { getPermitRequirements } from '@/data/governmentAgencies';
 import { getZoningInfo, getMunicipalityById } from '@/data/municipalities';
 import { getTranslation } from '@/utils/translations';
@@ -6,6 +5,7 @@ import { getTranslation } from '@/utils/translations';
 export interface BusinessProfile {
   name: string;
   businessType: string;
+  description: string;
   municipality: string;
   address?: string;
   employees: number;

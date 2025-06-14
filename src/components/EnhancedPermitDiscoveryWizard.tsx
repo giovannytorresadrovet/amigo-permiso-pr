@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -25,6 +24,7 @@ export const EnhancedPermitDiscoveryWizard = ({
   const [businessProfile, setBusinessProfile] = useState<Partial<BusinessProfile>>({
     name: '',
     businessType: '',
+    description: '',
     municipality: '',
     employees: 1,
     revenue: 'under50k',
