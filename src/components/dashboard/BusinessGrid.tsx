@@ -1,5 +1,5 @@
 
-import { EnhancedBusinessCard } from './EnhancedBusinessCard';
+import { BusinessCard } from './BusinessCard';
 import { BusinessCardSkeleton } from '@/components/ui/business-card-skeleton';
 import { PageTransition } from '@/components/ui/page-transition';
 import { MockBusiness } from '@/data/mockBusinesses';
@@ -25,7 +25,7 @@ export const BusinessGrid = ({ businesses, onBusinessSelect, loading = false }: 
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
       {businesses.map((business, index) => (
         <PageTransition key={business.id} delay={index * 50}>
-          <EnhancedBusinessCard
+          <BusinessCard
             business={business}
             onBusinessSelect={onBusinessSelect}
           />

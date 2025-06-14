@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { municipalities, businessTypes, validateCRIM, validatePRPhone, formatCRIM, formatPRPhone } from '@/utils/puertoRicoData';
-import { translations, getTranslation } from '@/utils/translations';
+import { getTranslation } from '@/utils/translations';
 import { Building2, MapPin, Phone, Mail } from 'lucide-react';
 
 const businessSchema = z.object({
