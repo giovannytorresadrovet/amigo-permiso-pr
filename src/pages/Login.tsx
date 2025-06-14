@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -11,7 +10,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { SocialLoginButton } from '@/components/auth/SocialLoginButton';
+import { AuthModeToggle } from '@/components/auth/AuthModeToggle';
+import { Auth0LoginButton } from '@/components/auth/Auth0LoginButton';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
+import { auth0Features } from '@/lib/auth0/config';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -89,101 +91,124 @@ const Login = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Social Login Buttons */}
-          <div className="space-y-3">
-            <SocialLoginButton provider="google" mode="login" disabled={isLoading} />
-            <SocialLoginButton provider="facebook" mode="login" disabled={isLoading} />
-            <SocialLoginButton provider="apple" mode="login" disabled={isLoading} />
-          </div>
+          <AuthModeToggle />
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full bg-slate-600" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-slate-800 px-2 text-slate-400">Or continue with email</span>
-            </div>
-          </div>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-slate-300">Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="email"
-                        placeholder="Enter your email"
-                        className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          {/* Auth0 Login Button - only shown when Auth0 is enabled */}
+          {auth0Features.enabled && (
+            <div className="space-y-3">
+              <Auth0LoginButton />
               
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-slate-300">Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          {...field}
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Enter your password"
-                          className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
-                          disabled={isLoading}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
-                          disabled={isLoading}
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full bg-slate-600" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-slate-800 px-2 text-slate-400">Or continue with email</span>
+                </div>
+              </div>
+            </div>
+          )}
 
-              <div className="flex items-center justify-between">
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-blue-400 hover:text-blue-300 underline"
-                >
-                  Forgot password?
-                </Link>
+          {/* Original form - hidden when Auth0 is enabled */}
+          {!auth0Features.enabled && (
+            <>
+              {/* Social Login Buttons */}
+              <div className="space-y-3">
+                <SocialLoginButton provider="google" mode="login" disabled={isLoading} />
+                <SocialLoginButton provider="facebook" mode="login" disabled={isLoading} />
+                <SocialLoginButton provider="apple" mode="login" disabled={isLoading} />
               </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign In'}
-              </Button>
-            </form>
-          </Form>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full bg-slate-600" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-slate-800 px-2 text-slate-400">Or continue with email</span>
+                </div>
+              </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-slate-400">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-blue-400 hover:text-blue-300 underline">
-                Sign up
-              </Link>
-            </p>
-          </div>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-slate-300">Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="email"
+                            placeholder="Enter your email"
+                            className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-slate-300">Password</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              {...field}
+                              type={showPassword ? 'text' : 'password'}
+                              placeholder="Enter your password"
+                              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
+                              disabled={isLoading}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
+                              disabled={isLoading}
+                            >
+                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex items-center justify-between">
+                    <Link
+                      to="/forgot-password"
+                      className="text-sm text-blue-400 hover:text-blue-300 underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Signing in...' : 'Sign In'}
+                  </Button>
+                </form>
+              </Form>
+
+              <div className="mt-6 text-center">
+                <p className="text-slate-400">
+                  Don't have an account?{' '}
+                  <Link to="/signup" className="text-blue-400 hover:text-blue-300 underline">
+                    Sign up
+                  </Link>
+                </p>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

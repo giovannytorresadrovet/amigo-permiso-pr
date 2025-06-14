@@ -6,3 +6,4 @@ export { businessDataSchema, fileValidationSchema, validateFile } from './valida
 export { getSecurityHeaders } from './headers';
 export { RateLimiter } from './rateLimiter';
 export { AuditLogger, type AuditEvent } from './auditLogger';
+export { logAuth0Event, validateAuth0Action, sanitizeAuth0UserData } from './auth0Integration';
