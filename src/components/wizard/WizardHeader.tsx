@@ -4,7 +4,7 @@ import { CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, Building2 } from 'lucide-react';
 
-interface BusinessWizardHeaderProps {
+interface WizardHeaderProps {
   onBack: () => void;
   title: string;
   currentStep: number;
@@ -12,13 +12,13 @@ interface BusinessWizardHeaderProps {
   progress: number;
 }
 
-export const BusinessWizardHeader = ({
+export const WizardHeader = ({
   onBack,
   title,
   currentStep,
   steps,
   progress
-}: BusinessWizardHeaderProps) => {
+}: WizardHeaderProps) => {
   return (
     <>
       <Button 

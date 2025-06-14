@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
 
-interface BusinessWizardNavigationProps {
+interface WizardNavigationProps {
   currentStep: number;
   totalSteps: number;
   onBack: () => void;
@@ -16,7 +16,7 @@ interface BusinessWizardNavigationProps {
   };
 }
 
-export const BusinessWizardNavigation = ({
+export const WizardNavigation = ({
   currentStep,
   totalSteps,
   onBack,
@@ -24,7 +24,7 @@ export const BusinessWizardNavigation = ({
   onComplete,
   canProceed,
   translations
-}: BusinessWizardNavigationProps) => {
+}: WizardNavigationProps) => {
   const isLastStep = currentStep === totalSteps - 1;
   const isFirstStep = currentStep === 0;
 
