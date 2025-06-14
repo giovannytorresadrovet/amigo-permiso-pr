@@ -99,6 +99,7 @@ export const PermitoriaApp = () => {
       <GerryAIAssistant 
         language={language}
         businessContext={businesses[0] ? {
+          businessId: businesses[0].id,
           name: businesses[0].name,
           type: businesses[0].businessType,
           municipality: businesses[0].municipality,
