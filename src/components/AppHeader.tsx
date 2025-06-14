@@ -23,7 +23,7 @@ export const AppHeader = ({ currentLanguage, onLanguageChange }: AppHeaderProps)
         <div className="flex items-center space-x-4">
           <LanguageToggle 
             currentLanguage={currentLanguage} 
-            onLanguageChange={onLanguageChange} 
+            onChange={onLanguageChange} 
           />
           
           <div className="flex items-center space-x-2">
