@@ -10,9 +10,10 @@ import { BusinessSetupWizard } from '@/components/dashboard/BusinessSetupWizard'
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
 import { ProfileSettings } from '@/components/dashboard/ProfileSettings';
-import { GerryAIAssistant } from '@/components/ai/GerryAIAssistant';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
+import { SecureGerryAIAssistant } from '@/components/ai/SecureGerryAIAssistant';
+import { UserContextProvider } from '@/contexts/UserContextProvider';
 
 const Dashboard = () => {
   const [currentView, setCurrentView] = useState('overview');
@@ -83,32 +84,34 @@ const Dashboard = () => {
   };
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-slate-50">
-        <DashboardSidebar 
-          currentView={currentView} 
-          onViewChange={setCurrentView}
-          language={language}
-          onLanguageChange={setLanguage}
-        />
-        <div className="flex-1 flex flex-col">
-          <DashboardHeader />
-          <main className="flex-1 p-4 sm:p-6">
-            {renderContent()}
-          </main>
+    <UserContextProvider userId="user-123"> {/* In real app, get from auth */}
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-slate-50">
+          <DashboardSidebar 
+            currentView={currentView} 
+            onViewChange={setCurrentView}
+            language={language}
+            onLanguageChange={setLanguage}
+          />
+          <div className="flex-1 flex flex-col">
+            <DashboardHeader />
+            <main className="flex-1 p-4 sm:p-6">
+              {renderContent()}
+            </main>
+          </div>
+          <SecureGerryAIAssistant 
+            language={language}
+            businessContext={selectedBusinessId ? {
+              businessId: selectedBusinessId,
+              name: 'Current Business',
+              type: 'Business',
+              municipality: 'Puerto Rico',
+              status: 'active'
+            } : undefined}
+          />
         </div>
-        <GerryAIAssistant 
-          language={language}
-          businessContext={selectedBusinessId ? {
-            businessId: selectedBusinessId,
-            name: 'Current Business',
-            type: 'Business',
-            municipality: 'Puerto Rico',
-            status: 'active'
-          } : undefined}
-        />
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </UserContextProvider>
   );
 };
 
