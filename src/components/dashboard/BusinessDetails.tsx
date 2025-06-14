@@ -1,2 +1,2 @@
 
-export { BusinessDetailsContainer as BusinessDetails } from './business-details/BusinessDetailsContainer';
+export { EnhancedBusinessDetailsContainer as BusinessDetails } from './business-details/EnhancedBusinessDetailsContainer';

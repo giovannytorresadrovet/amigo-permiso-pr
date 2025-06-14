@@ -1,3 +1,4 @@
+
 import { Business } from '@/types/business';
 
 const mockBusinessDetails: Record<string, Business> = {
@@ -22,6 +23,46 @@ const mockBusinessDetails: Record<string, Business> = {
       { name: 'Liquor License', status: 'Pending', expires: '2024-08-15', cost: '$450' },
       { name: 'Fire Department Permit', status: 'Active', expires: '2024-09-30', cost: '$125' },
     ],
+    operationalMetrics: {
+      totalInvestment: 185000,
+      annualRevenue: 95000,
+      complianceScore: 94,
+      riskLevel: 'low',
+      lastAudit: '2024-02-15'
+    },
+    digitalProfile: {
+      brandColors: {
+        primary: '#3B82F6',
+        secondary: '#8B5CF6'
+      },
+      socialMedia: {
+        facebook: 'facebook.com/cafeluna',
+        linkedin: 'linkedin.com/company/cafeluna'
+      }
+    },
+    certifications: [
+      {
+        name: 'Certificación de Seguridad Alimentaria',
+        issuer: 'Departamento de Salud PR',
+        expires: '2024-08-31',
+        verified: true
+      },
+      {
+        name: 'Certificación de Negocio Local',
+        issuer: 'Gobierno de Puerto Rico',
+        expires: '2024-12-31',
+        verified: true
+      }
+    ],
+    businessHours: {
+      monday: { open: '7:00', close: '19:00' },
+      tuesday: { open: '7:00', close: '19:00' },
+      wednesday: { open: '7:00', close: '19:00' },
+      thursday: { open: '7:00', close: '19:00' },
+      friday: { open: '7:00', close: '21:00' },
+      saturday: { open: '8:00', close: '21:00' },
+      sunday: { open: '8:00', close: '18:00' }
+    }
   },
   '2': {
     id: '2',
@@ -42,6 +83,30 @@ const mockBusinessDetails: Record<string, Business> = {
       { name: 'Business License', status: 'Active', expires: '2024-12-31' },
       { name: 'Professional Services License', status: 'Active', expires: '2024-09-30' },
     ],
+    operationalMetrics: {
+      totalInvestment: 350000,
+      annualRevenue: 425000,
+      complianceScore: 88,
+      riskLevel: 'low',
+      lastAudit: '2024-01-20'
+    },
+    digitalProfile: {
+      brandColors: {
+        primary: '#10B981',
+        secondary: '#3B82F6'
+      },
+      socialMedia: {
+        linkedin: 'linkedin.com/company/techflow-solutions',
+        twitter: 'twitter.com/techflow_pr'
+      }
+    },
+    businessHours: {
+      monday: { open: '9:00', close: '17:00' },
+      tuesday: { open: '9:00', close: '17:00' },
+      wednesday: { open: '9:00', close: '17:00' },
+      thursday: { open: '9:00', close: '17:00' },
+      friday: { open: '9:00', close: '17:00' }
+    }
   },
   '3': {
     id: '3',
@@ -62,6 +127,22 @@ const mockBusinessDetails: Record<string, Business> = {
       { name: 'Business License', status: 'Pending', expires: '2024-12-31' },
       { name: 'Retail Permit', status: 'Active', expires: '2024-10-31' },
     ],
+    operationalMetrics: {
+      totalInvestment: 85000,
+      annualRevenue: 42000,
+      complianceScore: 76,
+      riskLevel: 'medium',
+      lastAudit: '2024-03-01'
+    },
+    businessHours: {
+      monday: { open: '10:00', close: '18:00' },
+      tuesday: { open: '10:00', close: '18:00' },
+      wednesday: { open: '10:00', close: '18:00' },
+      thursday: { open: '10:00', close: '18:00' },
+      friday: { open: '10:00', close: '20:00' },
+      saturday: { open: '9:00', close: '20:00' },
+      sunday: { open: '12:00', close: '17:00' }
+    }
   },
 };
 
