@@ -1,0 +1,144 @@
+
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Shield, Eye, EyeOff } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
+const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true);
+    console.log('Login attempt:', data);
+    // TODO: Implement actual login logic
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 -left-4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 -right-4 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl"></div>
+      </div>
+      
+      <Card className="w-full max-w-md relative z-10 bg-slate-800/50 border-slate-700">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
+              <Shield className="w-7 h-7 text-white" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold text-white">Welcome Back</CardTitle>
+          <CardDescription className="text-slate-400">
+            Sign in to your PermitPR account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-slate-300">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="Enter your email"
+                        className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-slate-300">Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Enter your password"
+                          className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex items-center justify-between">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-blue-400 hover:text-blue-300 underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </Button>
+            </form>
+          </Form>
+
+          <div className="mt-6 text-center">
+            <p className="text-slate-400">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-blue-400 hover:text-blue-300 underline">
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default Login;
