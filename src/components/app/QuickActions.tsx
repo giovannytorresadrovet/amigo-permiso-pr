@@ -1,5 +1,7 @@
+
 import { Button } from '@/components/ui/button';
-import { Plus, Shield, FileText, Settings, Lock } from 'lucide-react';
+import { TrustBadge } from '@/components/ui/trust-badge';
+import { Plus, Shield, FileText, Settings, Lock, CheckCircle } from 'lucide-react';
 import { useUserManagement } from '@/contexts/UserManagement';
 
 interface QuickActionsProps {
@@ -27,52 +29,98 @@ export const QuickActions = ({
   };
 
   return (
-    <div className="grid md:grid-cols-4 gap-4 mb-8">
+    <div className="grid md:grid-cols-4 gap-4 mb-8 animate-fade-in-up">
+      {/* New Business Action - Enhanced with trust indicators */}
       <Button 
         onClick={handleNewBusinessClick}
-        className={`h-20 ${businessCreationAccess.hasAccess ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 hover:bg-gray-500'}`}
+        className={`h-24 relative overflow-hidden transition-professional shadow-professional hover:shadow-professional-lg ${
+          businessCreationAccess.hasAccess 
+            ? 'bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800' 
+            : 'bg-gradient-to-br from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600'
+        }`}
         title={!businessCreationAccess.hasAccess ? (language === 'es' ? 'Verificación requerida' : 'Verification required') : undefined}
       >
-        <div className="text-center">
-          {businessCreationAccess.hasAccess ? (
-            <Plus className="w-6 h-6 mx-auto mb-1" />
-          ) : (
-            <Lock className="w-6 h-6 mx-auto mb-1" />
-          )}
-          <span className="text-sm">
+        <div className="text-center relative z-10">
+          <div className="flex items-center justify-center mb-2">
+            {businessCreationAccess.hasAccess ? (
+              <Plus className="w-6 h-6" />
+            ) : (
+              <Lock className="w-6 h-6" />
+            )}
+          </div>
+          <span className="text-sm font-medium">
             {language === 'es' ? 'Nuevo Negocio' : 'New Business'}
           </span>
-          {!businessCreationAccess.hasAccess && (
-            <div className="text-xs opacity-75">
-              {language === 'es' ? 'Verificación requerida' : 'Verification required'}
-            </div>
-          )}
+          <div className="mt-1">
+            {businessCreationAccess.hasAccess ? (
+              <TrustBadge variant="verified" size="sm" className="bg-green-100/20 text-green-100 border-green-200/30">
+                <CheckCircle className="w-3 h-3" />
+                {language === 'es' ? 'Verificado' : 'Verified'}
+              </TrustBadge>
+            ) : (
+              <TrustBadge variant="warning" size="sm" className="bg-amber-100/20 text-amber-100 border-amber-200/30">
+                {language === 'es' ? 'Verificación requerida' : 'Verification required'}
+              </TrustBadge>
+            )}
+          </div>
         </div>
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
       </Button>
       
+      {/* Emergency Mode - Enhanced */}
       <Button 
         variant="outline" 
-        className="h-20"
+        className="h-24 border-red-200 hover:bg-red-50 hover:border-red-300 transition-professional shadow-professional hover:shadow-professional-lg"
         onClick={onEmergencyMode}
         disabled={!hasBusinesses}
       >
         <div className="text-center">
-          <Shield className="w-6 h-6 mx-auto mb-1 text-red-500" />
-          <span className="text-sm">{language === 'es' ? 'Modo Emergencia' : 'Emergency Mode'}</span>
+          <div className="flex items-center justify-center mb-2">
+            <Shield className="w-6 h-6 text-red-500" />
+          </div>
+          <span className="text-sm font-medium">{language === 'es' ? 'Modo Emergencia' : 'Emergency Mode'}</span>
+          <div className="mt-1">
+            <TrustBadge variant="error" size="sm">
+              {language === 'es' ? 'Seguro' : 'Secure'}
+            </TrustBadge>
+          </div>
         </div>
       </Button>
       
-      <Button variant="outline" className="h-20">
+      {/* Documents - Enhanced */}
+      <Button 
+        variant="outline" 
+        className="h-24 border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-professional shadow-professional hover:shadow-professional-lg"
+      >
         <div className="text-center">
-          <FileText className="w-6 h-6 mx-auto mb-1" />
-          <span className="text-sm">{language === 'es' ? 'Documentos' : 'Documents'}</span>
+          <div className="flex items-center justify-center mb-2">
+            <FileText className="w-6 h-6 text-slate-600" />
+          </div>
+          <span className="text-sm font-medium">{language === 'es' ? 'Documentos' : 'Documents'}</span>
+          <div className="mt-1">
+            <TrustBadge variant="info" size="sm">
+              {language === 'es' ? 'Protegido' : 'Protected'}
+            </TrustBadge>
+          </div>
         </div>
       </Button>
       
-      <Button variant="outline" className="h-20">
+      {/* Settings - Enhanced */}
+      <Button 
+        variant="outline" 
+        className="h-24 border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-professional shadow-professional hover:shadow-professional-lg"
+      >
         <div className="text-center">
-          <Settings className="w-6 h-6 mx-auto mb-1" />
-          <span className="text-sm">{language === 'es' ? 'Configuración' : 'Settings'}</span>
+          <div className="flex items-center justify-center mb-2">
+            <Settings className="w-6 h-6 text-slate-600" />
+          </div>
+          <span className="text-sm font-medium">{language === 'es' ? 'Configuración' : 'Settings'}</span>
+          <div className="mt-1">
+            <TrustBadge variant="info" size="sm">
+              {language === 'es' ? 'Privado' : 'Private'}
+            </TrustBadge>
+          </div>
         </div>
       </Button>
     </div>

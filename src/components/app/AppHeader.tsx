@@ -1,5 +1,7 @@
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { TrustBadge } from '@/components/ui/trust-badge';
 import { Bell, LogOut, ShieldCheck, Shield, AlertTriangle } from 'lucide-react';
 import { useUserManagement } from '@/contexts/UserManagement';
 
@@ -33,56 +35,59 @@ export const AppHeader = ({
   const getVerificationBadge = () => {
     if (user.identityVerified && user.verificationStatus === 'verified') {
       return (
-        <Badge className="bg-green-100 text-green-800 border-green-200 flex items-center gap-1">
-          <ShieldCheck className="w-3 h-3" />
+        <TrustBadge variant="verified">
           {language === 'es' ? 'Verificado' : 'Verified'}
-        </Badge>
+        </TrustBadge>
       );
     }
 
     if (user.verificationStatus === 'failed') {
       return (
-        <Badge className="bg-red-100 text-red-800 border-red-200 flex items-center gap-1">
-          <AlertTriangle className="w-3 h-3" />
+        <TrustBadge variant="error">
           {language === 'es' ? 'Verificación Fallida' : 'Verification Failed'}
-        </Badge>
+        </TrustBadge>
       );
     }
 
     if (user.verificationStatus === 'in_progress') {
       return (
-        <Badge className="bg-blue-100 text-blue-800 border-blue-200 flex items-center gap-1">
-          <Shield className="w-3 h-3" />
+        <TrustBadge variant="info">
           {language === 'es' ? 'En Proceso' : 'In Progress'}
-        </Badge>
+        </TrustBadge>
       );
     }
 
     return (
-      <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 flex items-center gap-1">
-        <Shield className="w-3 h-3" />
+      <TrustBadge variant="warning">
         {language === 'es' ? 'Sin Verificar' : 'Unverified'}
-      </Badge>
+      </TrustBadge>
     );
   };
 
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-white/95 backdrop-blur-md shadow-professional border-b border-slate-200/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
-            <div className="text-2xl font-bold text-blue-600">Permisoria</div>
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-sm">
+                <span className="text-white font-bold text-sm">P</span>
+              </div>
+              <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+                Permisoria
+              </div>
+            </div>
+            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 font-medium">
               Beta - Toa Baja
             </Badge>
           </div>
           
           <div className="flex items-center space-x-4">
             {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative">
+            <Button variant="ghost" size="sm" className="relative hover:bg-slate-50 transition-professional">
               <Bell className="w-5 h-5" />
               {urgentNotifications > 0 && (
-                <Badge className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs">
+                <Badge className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs p-0 flex items-center justify-center animate-pulse-gentle">
                   {urgentNotifications}
                 </Badge>
               )}
@@ -93,25 +98,31 @@ export const AppHeader = ({
               variant="outline"
               size="sm"
               onClick={() => onLanguageChange(language === 'es' ? 'en' : 'es')}
+              className="border-slate-200 hover:bg-slate-50 transition-professional"
             >
               {language === 'es' ? '🇺🇸 EN' : '🇵🇷 ES'}
             </Button>
             
-            {/* User Menu with Verification Status */}
-            <div className="flex items-center space-x-3">
+            {/* User Menu with Enhanced Verification Status */}
+            <div className="flex items-center space-x-3 pl-3 border-l border-slate-200">
               <div className="text-sm">
-                <div className="flex items-center gap-2">
-                  <p className="font-medium text-gray-900">{user.firstName} {user.lastName}</p>
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="font-semibold text-slate-900">{user.firstName} {user.lastName}</p>
                   {getVerificationBadge()}
                 </div>
-                <p className="text-gray-500">{user.email}</p>
+                <p className="text-slate-600 text-xs">{user.email}</p>
                 {!businessCreationAccess.hasAccess && (
-                  <p className="text-xs text-yellow-600">
+                  <p className="text-xs text-amber-600 mt-1">
                     {language === 'es' ? 'Verificación requerida para crear negocios' : 'Verification required to create businesses'}
                   </p>
                 )}
               </div>
-              <Button variant="ghost" size="sm" onClick={onLogout}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={onLogout}
+                className="hover:bg-red-50 hover:text-red-600 transition-professional"
+              >
                 <LogOut className="w-4 h-4" />
               </Button>
             </div>

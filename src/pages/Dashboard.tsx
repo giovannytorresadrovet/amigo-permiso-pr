@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
@@ -41,7 +42,7 @@ const Dashboard = () => {
     switch (currentView) {
       case 'overview':
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in-up">
             <OverviewStats />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <PermitsList />
@@ -63,7 +64,11 @@ const Dashboard = () => {
       case 'business-setup':
         return <BusinessSetupWizard onBack={handleBackToDashboard} />;
       case 'permits':
-        return <div className="p-6 bg-white rounded-lg shadow">My Permits - Coming Soon</div>;
+        return (
+          <div className="p-6 bg-white rounded-lg shadow-professional animate-fade-in-up">
+            My Permits - Coming Soon
+          </div>
+        );
       case 'documents':
         return <DocumentUploadArea language={language} onBack={handleBackToDashboard} />;
       case 'ai-discovery':
@@ -72,7 +77,7 @@ const Dashboard = () => {
         return <ProfileSettings onBack={handleBackToDashboard} />;
       default:
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in-up">
             <OverviewStats />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <PermitsList />
@@ -86,7 +91,7 @@ const Dashboard = () => {
   return (
     <UserContextProvider userId="user-123"> {/* In real app, get from auth */}
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-slate-50">
+        <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-slate-50">
           <DashboardSidebar 
             currentView={currentView} 
             onViewChange={setCurrentView}
@@ -95,8 +100,10 @@ const Dashboard = () => {
           />
           <div className="flex-1 flex flex-col">
             <DashboardHeader />
-            <main className="flex-1 p-4 sm:p-6">
-              {renderContent()}
+            <main className="flex-1 p-4 sm:p-6 bg-gradient-to-br from-slate-50/50 to-transparent">
+              <div className="max-w-7xl mx-auto">
+                {renderContent()}
+              </div>
             </main>
           </div>
           <SecureGerryAIAssistant 
