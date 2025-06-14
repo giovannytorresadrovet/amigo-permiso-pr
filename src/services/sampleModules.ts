@@ -1,9 +1,13 @@
-
 import { ModuleRegistry } from './moduleRegistry';
 import { ModuleMetadata } from '@/types/module';
+import { PermisoUnicoAutoAssignment } from './modules/permisoUnicoAutoAssignment';
 
 export const initializeSampleModules = () => {
   const registry = ModuleRegistry.getInstance();
+
+  // Initialize Permiso Unico auto-assignment
+  const permisoUnicoAutoAssignment = PermisoUnicoAutoAssignment.getInstance();
+  permisoUnicoAutoAssignment.checkAndAssignToExistingBusinesses();
 
   const sampleModules: ModuleMetadata[] = [
     {
