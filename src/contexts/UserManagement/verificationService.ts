@@ -14,10 +14,16 @@ export class VerificationService {
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
     };
 
-    // Simulate ID.me redirect URL generation
-    const verificationUrl = `https://api.id.me/api/public/v3/oauth/authorize?client_id=mock&response_type=code&redirect_uri=${encodeURIComponent(window.location.origin)}/verification/callback&scope=identity`;
+    // Generate ID.me verification URL with proper parameters
+    const baseUrl = 'https://api.id.me/api/public/v3/oauth/authorize';
+    const params = new URLSearchParams({
+      client_id: 'demo_client_id', // Replace with actual client ID in production
+      response_type: 'code',
+      redirect_uri: `${window.location.origin}/verification/callback`,
+      scope: 'identity'
+    });
     
-    session.redirectUrl = verificationUrl;
+    session.redirectUrl = `${baseUrl}?${params.toString()}`;
 
     AuditLogger.log({
       action: 'identity_verification_started',
@@ -37,14 +43,18 @@ export class VerificationService {
     data: any, 
     session: VerificationSession
   ): Promise<VerificationSession> {
-    // Simulate verification completion
+    // Simulate verification processing time
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     const updatedSession: VerificationSession = {
       ...session,
       status: 'completed',
       completedAt: new Date(),
-      verificationData: data
+      verificationData: {
+        ...data,
+        verifiedAt: new Date().toISOString(),
+        verificationId
+      }
     };
 
     AuditLogger.log({
@@ -64,10 +74,22 @@ export class VerificationService {
     session: VerificationSession, 
     errorMessage: string
   ): VerificationSession {
+    AuditLogger.log({
+      action: 'identity_verification_failed',
+      userId: session.userId,
+      details: {
+        provider: session.provider,
+        sessionId: session.id,
+        error: errorMessage,
+        timestamp: new Date().toISOString()
+      }
+    });
+
     return {
       ...session,
       status: 'failed',
-      errorMessage
+      errorMessage,
+      completedAt: new Date()
     };
   }
 }

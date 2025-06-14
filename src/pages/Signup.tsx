@@ -1,21 +1,24 @@
+
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Shield, Eye, EyeOff } from 'lucide-react';
+import { Shield, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { SocialLoginButton } from '@/components/auth/SocialLoginButton';
 import { AuthModeToggle } from '@/components/auth/AuthModeToggle';
 import { Auth0SignupButton } from '@/components/auth/Auth0SignupButton';
+import { EnhancedFormField } from '@/components/auth/EnhancedFormField';
+import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 import { auth0Features } from '@/lib/auth0/config';
+import { getAuthTranslation } from '@/utils/translations/authTranslations';
 
 const municipalities = [
   'Adjuntas', 'Aguada', 'Aguadilla', 'Aguas Buenas', 'Aibonito', 'Arecibo',
@@ -51,10 +54,11 @@ const signupSchema = z.object({
 type SignupFormData = z.infer<typeof signupSchema>;
 
 const Signup = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [language] = useState<'es' | 'en'>('es');
+  const navigate = useNavigate();
   const { notifySuccess, notifyError, notifyWarning } = useNotificationEffects();
+  const t = (key: string) => getAuthTranslation(key, language);
 
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -69,38 +73,41 @@ const Signup = () => {
     },
   });
 
+  const password = form.watch('password');
+
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
-    console.log('Signup attempt:', data);
     
     try {
-      // TODO: Replace with actual signup logic
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Store email for verification flow
+      localStorage.setItem('pending_verification_email', data.email);
+      localStorage.setItem('preferred_language', language);
       
       // Simulate success/failure for demo
       const success = Math.random() > 0.2;
       
       if (success) {
         notifySuccess(
-          'Account Created Successfully',
-          `Welcome ${data.firstName}! Your account has been created for ${data.municipality}. Please check your email to verify your account.`,
-          true
+          t('accountCreated'),
+          `Welcome ${data.firstName}! Your account has been created for ${data.municipality}.`,
+          false
         );
-        notifyWarning(
-          'Email Verification Required',
-          'Please check your email and click the verification link to activate your account.',
-          true
-        );
+        
+        // Redirect to email verification
+        navigate(`/email-verification?email=${encodeURIComponent(data.email)}`);
       } else {
         notifyError(
-          'Signup Failed',
-          'Email address is already registered. Please try a different email or sign in instead.',
+          t('signupError'),
+          t('emailAlreadyExists'),
           true
         );
       }
     } catch (error) {
       notifyError(
-        'Signup Error',
+        t('signupError'),
         'An unexpected error occurred during account creation. Please try again.',
         true
       );
@@ -112,22 +119,31 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 -right-4 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 -right-4 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl animate-pulse"></div>
       </div>
       
-      <Card className="w-full max-w-md relative z-10 bg-slate-800/50 border-slate-700">
+      <Card className="w-full max-w-md relative z-10 bg-slate-800/50 border-slate-700 animate-scale-in">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
               <Shield className="w-7 h-7 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-white">Create Account</CardTitle>
+          <CardTitle className="text-2xl font-bold text-white">
+            {t('createAccountEnhanced')}
+          </CardTitle>
           <CardDescription className="text-slate-400">
-            Join PermitPR to get started
+            {t('signupDescription')}
           </CardDescription>
+          
+          {/* Cultural Sensitivity Badge */}
+          <div className="flex items-center justify-center mt-4 text-xs text-slate-400">
+            <Globe className="w-3 h-3 mr-1" />
+            {t('puertoRicanBusiness')}
+          </div>
         </CardHeader>
+        
         <CardContent className="space-y-6">
           <AuthModeToggle />
 
@@ -163,38 +179,28 @@ const Signup = () => {
                     <FormField
                       control={form.control}
                       name="firstName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-300">First Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="John"
-                              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
-                              disabled={isLoading}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+                      render={({ field, fieldState }) => (
+                        <EnhancedFormField
+                          field={field}
+                          label="First Name"
+                          placeholder="John"
+                          error={fieldState.error?.message}
+                          disabled={isLoading}
+                        />
                       )}
                     />
                     
                     <FormField
                       control={form.control}
                       name="lastName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-300">Last Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Doe"
-                              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
-                              disabled={isLoading}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+                      render={({ field, fieldState }) => (
+                        <EnhancedFormField
+                          field={field}
+                          label="Last Name"
+                          placeholder="Doe"
+                          error={fieldState.error?.message}
+                          disabled={isLoading}
+                        />
                       )}
                     />
                   </div>
@@ -202,20 +208,15 @@ const Signup = () => {
                   <FormField
                     control={form.control}
                     name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-300">Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="email"
-                            placeholder="john@example.com"
-                            className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
-                            disabled={isLoading}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                    render={({ field, fieldState }) => (
+                      <EnhancedFormField
+                        field={field}
+                        type="email"
+                        label={t('email')}
+                        placeholder="john@example.com"
+                        error={fieldState.error?.message}
+                        disabled={isLoading}
+                      />
                     )}
                   />
 
@@ -251,60 +252,36 @@ const Signup = () => {
                   <FormField
                     control={form.control}
                     name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-300">Password</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              {...field}
-                              type={showPassword ? 'text' : 'password'}
-                              placeholder="Create a password"
-                              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
-                              disabled={isLoading}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
-                              disabled={isLoading}
-                            >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                    render={({ field, fieldState }) => (
+                      <EnhancedFormField
+                        field={field}
+                        label={t('password')}
+                        placeholder="Create a password"
+                        showPasswordToggle={true}
+                        error={fieldState.error?.message}
+                        disabled={isLoading}
+                      >
+                        <PasswordStrengthIndicator 
+                          password={password} 
+                          language={language}
+                          className="mt-2"
+                        />
+                      </EnhancedFormField>
                     )}
                   />
 
                   <FormField
                     control={form.control}
                     name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-slate-300">Confirm Password</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              {...field}
-                              type={showConfirmPassword ? 'text' : 'password'}
-                              placeholder="Confirm your password"
-                              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
-                              disabled={isLoading}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
-                              disabled={isLoading}
-                            >
-                              {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                    render={({ field, fieldState }) => (
+                      <EnhancedFormField
+                        field={field}
+                        label="Confirm Password"
+                        placeholder="Confirm your password"
+                        showPasswordToggle={true}
+                        error={fieldState.error?.message}
+                        disabled={isLoading}
+                      />
                     )}
                   />
 
@@ -343,7 +320,7 @@ const Signup = () => {
                     className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Creating account...' : 'Create Account'}
+                    {isLoading ? t('creatingAccountSecurely') : 'Create Account'}
                   </Button>
                 </form>
               </Form>
