@@ -119,7 +119,9 @@ const Dashboard = () => {
       role: 'business_owner',
       verified: true,
       identityVerified: true,
-      preferredLanguage: 'es'
+      verificationStatus: 'verified',
+      preferredLanguage: 'es',
+      createdAt: new Date('2024-01-01')
     }}>
       <UserContextProvider userId="user-123">
         <SidebarProvider>

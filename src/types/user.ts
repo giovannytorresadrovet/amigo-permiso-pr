@@ -11,6 +11,7 @@ export interface User {
   verificationStatus: 'pending' | 'in_progress' | 'verified' | 'failed';
   verificationDate?: Date;
   idMeVerificationId?: string;
+  preferredLanguage?: 'es' | 'en';
   createdAt: Date;
   lastLogin?: Date;
 }
