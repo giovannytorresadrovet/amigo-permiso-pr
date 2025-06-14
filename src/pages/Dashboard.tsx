@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
@@ -19,7 +18,7 @@ import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 import { SecureGerryAIAssistant } from '@/components/ai/SecureGerryAIAssistant';
 import { UserContextProvider } from '@/contexts/UserContextProvider';
 import { UserManagementProvider } from '@/contexts/UserManagement';
-import { ModuleContextProvider } from '@/contexts/ModuleContext';
+import { ModuleContextProvider } from '@/contexts/ModuleContext/ModuleContextProvider';
 
 const Dashboard = () => {
   const [currentView, setCurrentView] = useState('overview');
