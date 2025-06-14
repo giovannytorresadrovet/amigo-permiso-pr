@@ -2,11 +2,12 @@
 import { useState, useCallback } from 'react';
 import { DocumentItem, DocumentTranslations } from "@/types/document";
 import { DocumentProgress } from "./DocumentProgress";
-import { DocumentUploadZone } from "./DocumentUploadZone";
+import { SecureFileUpload } from "./SecureFileUpload";
 import { DocumentHeader } from "./DocumentHeader";
 import { DocumentTitle } from "./DocumentTitle";
 import { DocumentList } from "./DocumentList";
 import { DocumentActionButton } from "./DocumentActionButton";
+import { AuditLogger } from '@/lib/security';
 
 interface DocumentUploadAreaProps {
   language: 'es' | 'en';
@@ -21,8 +22,6 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
     { id: '4', name: 'Certificado de Deuda Municipal', type: 'tax', status: 'pending' },
     { id: '5', name: 'Póliza de Seguro Comercial', type: 'insurance', status: 'pending' },
   ]);
-
-  const [dragActive, setDragActive] = useState(false);
 
   const translations: Record<'es' | 'en', DocumentTranslations> = {
     es: {
@@ -79,35 +78,27 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
 
   const t = translations[language];
 
-  const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  }, []);
+  const simulateDocumentProcessing = useCallback((file: File, metadata: any) => {
+    // Log the secure upload
+    AuditLogger.log({
+      action: 'document_upload_initiated',
+      details: {
+        fileName: metadata.sanitizedName,
+        fileSize: file.size,
+        fileType: file.type,
+        checksum: metadata.checksum
+      }
+    });
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      simulateDocumentProcessing(e.dataTransfer.files[0]);
-    }
-  }, []);
-
-  const simulateDocumentProcessing = (file: File) => {
     const pendingDoc = documents.find(doc => doc.status === 'pending');
     if (pendingDoc) {
       setDocuments(prev => prev.map(doc => 
         doc.id === pendingDoc.id 
-          ? { ...doc, status: 'uploaded' as const }
+          ? { ...doc, status: 'uploaded' as const, metadata }
           : doc
       ));
 
+      // Simulate AI processing with security validation
       setTimeout(() => {
         const isValid = Math.random() > 0.3;
         const score = isValid ? 85 + Math.random() * 15 : 40 + Math.random() * 40;
@@ -125,15 +116,20 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
               }
             : doc
         ));
+
+        // Log processing result
+        AuditLogger.log({
+          action: 'document_processing_completed',
+          details: {
+            documentId: pendingDoc.id,
+            fileName: metadata.sanitizedName,
+            validationResult: isValid ? 'validated' : 'rejected',
+            qualityScore: Math.round(score)
+          }
+        });
       }, 2000);
     }
-  };
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      simulateDocumentProcessing(e.target.files[0]);
-    }
-  };
+  }, [documents, language]);
 
   const completedDocs = documents.filter(doc => doc.status === 'validated').length;
   const totalDocs = documents.length;
@@ -152,14 +148,10 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
 
         <DocumentProgress documents={documents} translations={t} />
 
-        <DocumentUploadZone
-          dragActive={dragActive}
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-          onFileInput={handleFileInput}
-          translations={t}
+        <SecureFileUpload
+          onFileUpload={simulateDocumentProcessing}
+          language={language}
+          className="mb-8"
         />
 
         <DocumentList documents={documents} translations={t} />
