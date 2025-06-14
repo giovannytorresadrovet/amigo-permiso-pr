@@ -136,6 +136,39 @@
     @apply text-xl md:text-2xl leading-snug;
   }
 
+  /* FOCUS RING FIXES - Override browser defaults and ensure consistent blue focus */
+  *:focus,
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring)) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 2px hsl(var(--ring)) !important;
+  }
+
+  /* Explicitly prevent yellow focus rings */
+  button:focus,
+  button:focus-visible,
+  input:focus,
+  input:focus-visible,
+  select:focus,
+  select:focus-visible,
+  textarea:focus,
+  textarea:focus-visible,
+  [role="button"]:focus,
+  [role="button"]:focus-visible,
+  [tabindex]:focus,
+  [tabindex]:focus-visible {
+    outline: 2px solid hsl(var(--ring)) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 2px hsl(var(--ring)) !important;
+    background-color: transparent !important;
+  }
+
+  /* Remove default browser focus styles that might cause yellow highlighting */
+  *::-moz-focus-inner {
+    border: 0 !important;
+    outline: 0 !important;
+  }
+
   /* Trust indicators */
   .trust-badge {
     @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium;
@@ -185,6 +218,33 @@
 
   .gradient-warning {
     background: var(--gradient-warning);
+  }
+}
+
+@layer utilities {
+  /* Custom focus utilities to ensure consistent blue focus rings */
+  .focus-ring-blue {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2;
+  }
+
+  .focus-ring-primary {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  .focus-ring-none {
+    @apply focus-visible:outline-none focus-visible:ring-0;
+  }
+
+  /* Prevent yellow focus highlighting utility */
+  .no-yellow-focus {
+    outline: none !important;
+  }
+
+  .no-yellow-focus:focus,
+  .no-yellow-focus:focus-visible {
+    outline: 2px solid hsl(var(--ring)) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 2px hsl(var(--ring)) !important;
   }
 }
 

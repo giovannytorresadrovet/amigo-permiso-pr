@@ -14,7 +14,7 @@ export const LanguageToggle = ({ currentLanguage, onChange }: LanguageToggleProp
         variant={currentLanguage === 'es' ? 'default' : 'ghost'}
         size="sm"
         onClick={() => onChange('es')}
-        className={`rounded-full px-4 ${
+        className={`rounded-full px-4 focus-ring-primary no-yellow-focus ${
           currentLanguage === 'es' 
             ? 'bg-blue-600 text-white hover:bg-blue-700' 
             : 'text-slate-300 hover:text-white hover:bg-slate-700'
@@ -26,7 +26,7 @@ export const LanguageToggle = ({ currentLanguage, onChange }: LanguageToggleProp
         variant={currentLanguage === 'en' ? 'default' : 'ghost'}
         size="sm"
         onClick={() => onChange('en')}
-        className={`rounded-full px-4 ${
+        className={`rounded-full px-4 focus-ring-primary no-yellow-focus ${
           currentLanguage === 'en' 
             ? 'bg-blue-600 text-white hover:bg-blue-700' 
             : 'text-slate-300 hover:text-white hover:bg-slate-700'
