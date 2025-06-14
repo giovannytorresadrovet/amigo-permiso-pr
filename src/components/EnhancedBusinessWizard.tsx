@@ -19,6 +19,7 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
   const [businessData, setBusinessData] = useState({
     name: '',
     businessType: '',
+    description: '',
     address: null,
     employees: '1',
     revenue: 'under50k'
@@ -29,6 +30,12 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
     es: {
       title: "Asistente de Configuración Empresarial",
       steps: ["Información Básica", "Ubicación", "Detalles", "Resumen"],
+      businessName: "Nombre del Negocio",
+      businessType: "Tipo de Negocio",
+      description: "Descripción",
+      back: "Atrás",
+      next: "Siguiente",
+      complete: "Completar",
       businessTypes: {
         restaurant: "Restaurante",
         retail: "Comercio al Detal",
@@ -59,6 +66,12 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
     en: {
       title: "Business Setup Wizard",
       steps: ["Basic Info", "Location", "Details", "Summary"],
+      businessName: "Business Name",
+      businessType: "Business Type",
+      description: "Description",
+      back: "Back",
+      next: "Next",
+      complete: "Complete",
       businessTypes: {
         restaurant: "Restaurant",
         retail: "Retail Store",
@@ -149,8 +162,12 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
               <BusinessWizardStep1
                 businessData={businessData}
                 onDataChange={handleDataChange}
-                translations={{ businessTypes: t.businessTypes }}
-                language={language}
+                translations={{
+                  businessName: t.businessName,
+                  businessType: t.businessType,
+                  description: t.description,
+                  businessTypes: t.businessTypes
+                }}
               />
             )}
 
@@ -190,7 +207,12 @@ export const EnhancedBusinessWizard = ({ language, onComplete, onBack }: Enhance
               canProceed={canProceed()}
               onNext={handleNext}
               onBack={handleBack}
-              language={language}
+              onComplete={handleNext}
+              translations={{
+                back: t.back,
+                next: t.next,
+                complete: t.complete
+              }}
             />
           </CardContent>
         </Card>
