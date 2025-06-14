@@ -116,7 +116,7 @@ const Dashboard = () => {
       email: 'maria.gonzalez@email.com',
       firstName: 'María',
       lastName: 'González',
-      role: 'user',
+      role: 'business_owner',
       verified: true,
       identityVerified: true,
       preferredLanguage: 'es'
