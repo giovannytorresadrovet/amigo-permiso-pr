@@ -45,12 +45,12 @@ export const BusinessSetupWizard = ({ language, onBack }: BusinessSetupWizardPro
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const canContinue = () => {
+  const canContinue = (): boolean => {
     if (currentStep === 1) {
-      return formData.businessName && formData.businessType && formData.employees && formData.revenue;
+      return !!(formData.businessName && formData.businessType && formData.employees && formData.revenue);
     }
     if (currentStep === 2) {
-      return formData.location && formData.municipality;
+      return !!(formData.location && formData.municipality);
     }
     return true;
   };
