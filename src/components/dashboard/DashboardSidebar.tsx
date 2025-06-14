@@ -1,3 +1,4 @@
+
 import { Shield, LayoutDashboard, FileText, Upload, User, Settings, LogOut, Building, Briefcase, Brain, Globe, ShieldCheck, AlertTriangle, Package, Store } from 'lucide-react';
 import {
   Sidebar,
@@ -71,7 +72,7 @@ export const DashboardSidebar = ({ currentView, onViewChange, language, onLangua
     if (user?.identityVerified && user?.verificationStatus === 'verified') {
       return <ShieldCheck className="w-4 h-4 text-green-500" />;
     }
-    return <Shield className="w-4 h-4 text-yellow-500" />;
+    return <Shield className="w-4 h-4 text-blue-500" />;
   };
 
   const getVerificationStatus = () => {
@@ -169,7 +170,7 @@ export const DashboardSidebar = ({ currentView, onViewChange, language, onLangua
                         </Badge>
                       )}
                       {isDisabled && (
-                        <Shield className="w-3 h-3 ml-auto text-yellow-500" />
+                        <Shield className="w-3 h-3 ml-auto text-blue-500" />
                       )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -182,9 +183,9 @@ export const DashboardSidebar = ({ currentView, onViewChange, language, onLangua
         {/* Verification Alert */}
         {!businessCreationAccess.hasAccess && (
           <div className="px-4 mt-4">
-            <Alert className="border-yellow-200 bg-yellow-50">
-              <AlertTriangle className="w-4 h-4 text-yellow-600" />
-              <AlertDescription className="text-yellow-800 text-xs">
+            <Alert className="border-blue-200 bg-blue-50">
+              <AlertTriangle className="w-4 h-4 text-blue-600" />
+              <AlertDescription className="text-blue-800 text-xs">
                 {language === 'es' 
                   ? 'Verifica tu identidad para acceder a todas las funciones.'
                   : 'Verify your identity to access all features.'
