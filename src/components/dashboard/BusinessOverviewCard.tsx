@@ -16,7 +16,7 @@ interface BusinessOverviewCardProps {
     location: string;
     phone: string;
     email: string;
-    website: string;
+    website?: string;
     established: string;
     employees: number;
   };
@@ -51,10 +51,12 @@ export const BusinessOverviewCard = ({ business }: BusinessOverviewCardProps) =>
             </div>
           </div>
           <div className="space-y-3">
-            <div className="flex items-center text-sm text-slate-600">
-              <Globe className="w-4 h-4 mr-2" />
-              {business.website}
-            </div>
+            {business.website && (
+              <div className="flex items-center text-sm text-slate-600">
+                <Globe className="w-4 h-4 mr-2" />
+                {business.website}
+              </div>
+            )}
             <div className="flex items-center text-sm text-slate-600">
               <Calendar className="w-4 h-4 mr-2" />
               Establecido en {business.established}

@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft } from 'lucide-react';
-import { BusinessSetupHeader } from './BusinessSetupHeader';
-import { BusinessSetupNavigation } from './BusinessSetupNavigation';
+import { BusinessSetupHeader } from '../../business-setup/BusinessSetupHeader';
+import { BusinessSetupNavigation } from '../../business-setup/BusinessSetupNavigation';
 import { WizardStepContent } from '../../wizard/WizardStepContent';
 import { useBusinessSetupState } from './useBusinessSetupState';
 
