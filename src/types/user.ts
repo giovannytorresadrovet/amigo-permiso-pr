@@ -1,35 +1,44 @@
 
-export interface User {
+export interface UserProfile {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
-  verified: boolean;
-  identityVerified: boolean;
-  role: 'guest' | 'business_owner' | 'admin';
-  verificationStatus: 'pending' | 'in_progress' | 'verified' | 'failed';
-  verificationDate?: Date;
-  idMeVerificationId?: string;
-  preferredLanguage?: 'es' | 'en';
+  name: string;
+  avatar?: string;
+  role: 'admin' | 'user' | 'inspector';
+  permissions: string[];
+  businessIds: string[];
   createdAt: Date;
-  lastLogin?: Date;
+  lastLoginAt?: Date;
+  isEmailVerified: boolean;
+  preferences: {
+    language: 'en' | 'es';
+    theme: 'light' | 'dark' | 'system';
+    notifications: {
+      email: boolean;
+      push: boolean;
+      sms: boolean;
+    };
+  };
+  metadata: Record<string, any>;
 }
 
-export interface VerificationSession {
+export interface UserActivity {
   id: string;
   userId: string;
-  provider: 'id_me';
-  status: 'initiated' | 'in_progress' | 'completed' | 'failed' | 'expired';
-  redirectUrl?: string;
-  verificationData?: any;
-  createdAt: Date;
-  completedAt?: Date;
-  errorMessage?: string;
+  action: string;
+  details: Record<string, any>;
+  timestamp: Date;
+  ipAddress?: string;
+  userAgent?: string;
 }
 
-export interface BusinessCreationAccess {
-  hasAccess: boolean;
-  reason?: 'not_verified' | 'verification_failed' | 'account_suspended';
-  requiresVerification: boolean;
+export interface UserSession {
+  id: string;
+  userId: string;
+  token: string;
+  expiresAt: Date;
+  createdAt: Date;
+  lastActiveAt: Date;
+  ipAddress?: string;
+  userAgent?: string;
 }
