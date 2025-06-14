@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -10,6 +11,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { SocialLoginButton } from '@/components/auth/SocialLoginButton';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
 const municipalities = [
@@ -123,7 +126,23 @@ const Signup = () => {
             Join PermitPR to get started
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
+          {/* Social Login Buttons */}
+          <div className="space-y-3">
+            <SocialLoginButton provider="google" mode="signup" disabled={isLoading} />
+            <SocialLoginButton provider="facebook" mode="signup" disabled={isLoading} />
+            <SocialLoginButton provider="apple" mode="signup" disabled={isLoading} />
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full bg-slate-600" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-slate-800 px-2 text-slate-400">Or create account with email</span>
+            </div>
+          </div>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -138,6 +157,7 @@ const Signup = () => {
                           {...field}
                           placeholder="John"
                           className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage />
@@ -156,6 +176,7 @@ const Signup = () => {
                           {...field}
                           placeholder="Doe"
                           className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage />
@@ -176,6 +197,7 @@ const Signup = () => {
                         type="email"
                         placeholder="john@example.com"
                         className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                        disabled={isLoading}
                       />
                     </FormControl>
                     <FormMessage />
@@ -189,7 +211,7 @@ const Signup = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-slate-300">Municipality</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
                       <FormControl>
                         <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
                           <SelectValue placeholder="Select your municipality" className="text-slate-400" />
@@ -225,11 +247,13 @@ const Signup = () => {
                           type={showPassword ? 'text' : 'password'}
                           placeholder="Create a password"
                           className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
+                          disabled={isLoading}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
+                          disabled={isLoading}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -253,11 +277,13 @@ const Signup = () => {
                           type={showConfirmPassword ? 'text' : 'password'}
                           placeholder="Confirm your password"
                           className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
+                          disabled={isLoading}
                         />
                         <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                           className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
+                          disabled={isLoading}
                         >
                           {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -278,6 +304,7 @@ const Signup = () => {
                         checked={field.value}
                         onCheckedChange={field.onChange}
                         className="border-slate-600 data-[state=checked]:bg-blue-500"
+                        disabled={isLoading}
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">

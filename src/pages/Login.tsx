@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -8,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Separator } from '@/components/ui/separator';
+import { SocialLoginButton } from '@/components/auth/SocialLoginButton';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 
 const loginSchema = z.object({
@@ -85,7 +88,23 @@ const Login = () => {
             Sign in to your PermitPR account
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
+          {/* Social Login Buttons */}
+          <div className="space-y-3">
+            <SocialLoginButton provider="google" mode="login" disabled={isLoading} />
+            <SocialLoginButton provider="facebook" mode="login" disabled={isLoading} />
+            <SocialLoginButton provider="apple" mode="login" disabled={isLoading} />
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full bg-slate-600" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-slate-800 px-2 text-slate-400">Or continue with email</span>
+            </div>
+          </div>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -100,6 +119,7 @@ const Login = () => {
                         type="email"
                         placeholder="Enter your email"
                         className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                        disabled={isLoading}
                       />
                     </FormControl>
                     <FormMessage />
@@ -120,11 +140,13 @@ const Login = () => {
                           type={showPassword ? 'text' : 'password'}
                           placeholder="Enter your password"
                           className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 pr-10"
+                          disabled={isLoading}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-300"
+                          disabled={isLoading}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>

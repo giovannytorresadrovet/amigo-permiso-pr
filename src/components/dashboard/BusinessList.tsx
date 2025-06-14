@@ -15,13 +15,14 @@ export const BusinessList = ({ onBusinessSelect }: BusinessListProps) => {
   const [isNewBusinessModalOpen, setIsNewBusinessModalOpen] = useState(false);
   const isMobile = useIsMobile();
 
+  // Enhanced mock data with more realistic scenarios
   const businesses = [
     {
       id: '1',
       name: 'Café Luna',
       type: 'restaurant',
       typeLabel: 'Restaurante',
-      description: 'Café artesanal con ambiente acogedor',
+      description: 'Café artesanal con ambiente acogedor en el corazón de Viejo San Juan',
       address: 'Calle Fortaleza 123',
       municipality: 'San Juan',
       zipCode: '00901',
@@ -29,14 +30,15 @@ export const BusinessList = ({ onBusinessSelect }: BusinessListProps) => {
       email: 'info@cafeluna.com',
       status: 'active',
       permitCount: 5,
-      lastUpdate: '2024-01-15'
+      lastUpdate: '2024-01-15',
+      socialProvider: 'google' // Mock: registered via Google
     },
     {
       id: '2',
       name: 'TechFlow Solutions',
       type: 'technology',
       typeLabel: 'Tecnología',
-      description: 'Consultoría en tecnología para pequeñas empresas',
+      description: 'Consultoría en tecnología para pequeñas empresas y startups',
       address: 'Av. Ashford 456',
       municipality: 'Guaynabo',
       zipCode: '00968',
@@ -44,7 +46,56 @@ export const BusinessList = ({ onBusinessSelect }: BusinessListProps) => {
       email: 'contact@techflow.pr',
       status: 'pending',
       permitCount: 3,
-      lastUpdate: '2024-01-10'
+      lastUpdate: '2024-01-10',
+      socialProvider: 'facebook' // Mock: registered via Facebook
+    },
+    {
+      id: '3',
+      name: 'Panadería Doña Carmen',
+      type: 'retail',
+      typeLabel: 'Comercio',
+      description: 'Panadería tradicional puertorriqueña con más de 30 años sirviendo la comunidad',
+      address: 'Calle Principal 789',
+      municipality: 'Bayamón',
+      zipCode: '00961',
+      phone: '(787) 555-0789',
+      email: 'panaderia@carmen.pr',
+      status: 'active',
+      permitCount: 7,
+      lastUpdate: '2024-01-18',
+      socialProvider: 'email' // Mock: registered via email
+    },
+    {
+      id: '4',
+      name: 'Eco Adventures PR',
+      type: 'services',
+      typeLabel: 'Servicios',
+      description: 'Tours ecológicos y aventuras en la naturaleza de Puerto Rico',
+      address: 'Carr. 191 Km 4.5',
+      municipality: 'Rincón',
+      zipCode: '00677',
+      phone: '(787) 555-0321',
+      email: 'adventures@ecopr.com',
+      status: 'inactive',
+      permitCount: 2,
+      lastUpdate: '2024-01-05',
+      socialProvider: 'apple' // Mock: registered via Apple
+    },
+    {
+      id: '5',
+      name: 'Farmacia San Miguel',
+      type: 'healthcare',
+      typeLabel: 'Salud',
+      description: 'Farmacia comunitaria con servicios de salud y consultas',
+      address: 'Ave. Luis Muñoz Rivera 234',
+      municipality: 'Caguas',
+      zipCode: '00725',
+      phone: '(787) 555-0654',
+      email: 'farmacia@sanmiguel.pr',
+      status: 'active',
+      permitCount: 8,
+      lastUpdate: '2024-01-20',
+      socialProvider: 'google' // Mock: registered via Google
     }
   ];
 
@@ -72,6 +123,25 @@ export const BusinessList = ({ onBusinessSelect }: BusinessListProps) => {
       default:
         return status;
     }
+  };
+
+  const getSocialProviderBadge = (provider: string) => {
+    if (provider === 'email') return null;
+    
+    const providerConfig = {
+      google: { name: 'Google', color: 'bg-blue-100 text-blue-800' },
+      facebook: { name: 'Facebook', color: 'bg-blue-100 text-blue-800' },
+      apple: { name: 'Apple', color: 'bg-gray-100 text-gray-800' }
+    };
+    
+    const config = providerConfig[provider as keyof typeof providerConfig];
+    if (!config) return null;
+    
+    return (
+      <Badge variant="outline" className={`text-xs ${config.color}`}>
+        via {config.name}
+      </Badge>
+    );
   };
 
   return (
@@ -105,9 +175,12 @@ export const BusinessList = ({ onBusinessSelect }: BusinessListProps) => {
                     <CardDescription className="text-sm">{business.typeLabel}</CardDescription>
                   </div>
                 </div>
-                <Badge className={getStatusColor(business.status)}>
-                  {getStatusText(business.status)}
-                </Badge>
+                <div className="flex flex-col items-end space-y-1">
+                  <Badge className={getStatusColor(business.status)}>
+                    {getStatusText(business.status)}
+                  </Badge>
+                  {getSocialProviderBadge(business.socialProvider)}
+                </div>
               </div>
             </CardHeader>
             
