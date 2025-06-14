@@ -85,6 +85,17 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
 
   const t = translations[language];
 
+  // Helper function to safely get category name
+  const getCategoryName = (type: string): string => {
+    const validTypes = ['legal', 'business', 'zoning', 'tax', 'insurance'] as const;
+    type ValidType = typeof validTypes[number];
+    
+    if (validTypes.includes(type as ValidType)) {
+      return t.categories[type as ValidType];
+    }
+    return type; // fallback to the original type string
+  };
+
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -162,16 +173,6 @@ export const DocumentUploadArea = ({ language, onBack }: DocumentUploadAreaProps
       case 'rejected': return <AlertTriangle className="w-4 h-4 text-red-400" />;
       default: return <FileText className="w-4 h-4 text-slate-400" />;
     }
-  };
-
-  const getCategoryName = (type: string): string => {
-    const validTypes = ['legal', 'business', 'zoning', 'tax', 'insurance'] as const;
-    type ValidType = typeof validTypes[number];
-    
-    if (validTypes.includes(type as ValidType)) {
-      return t.categories[type as ValidType];
-    }
-    return type; // fallback to the original type string
   };
 
   const completedDocs = documents.filter(doc => doc.status === 'validated').length;
