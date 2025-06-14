@@ -11,6 +11,9 @@ import { BusinessSetupWizard } from '@/components/dashboard/BusinessSetupWizard'
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
 import { ProfileSettings } from '@/components/dashboard/ProfileSettings';
+import { ModuleDiscovery } from '@/components/modules/ModuleDiscovery';
+import { ModuleStore } from '@/components/modules/ModuleStore';
+import { ModuleManager } from '@/components/modules/ModuleManager';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 import { SecureGerryAIAssistant } from '@/components/ai/SecureGerryAIAssistant';
@@ -73,6 +76,24 @@ const Dashboard = () => {
         return <DocumentUploadArea language={language} onBack={handleBackToDashboard} />;
       case 'ai-discovery':
         return <PermitDiscoveryAI language={language} onBack={handleBackToDashboard} />;
+      case 'modules':
+        return (
+          <div className="space-y-6 animate-fade-in-up">
+            <ModuleDiscovery language={language} />
+          </div>
+        );
+      case 'module-store':
+        return (
+          <div className="space-y-6 animate-fade-in-up">
+            <ModuleStore language={language} />
+          </div>
+        );
+      case 'module-manager':
+        return (
+          <div className="space-y-6 animate-fade-in-up">
+            <ModuleManager language={language} />
+          </div>
+        );
       case 'profile':
         return <ProfileSettings onBack={handleBackToDashboard} />;
       default:
@@ -89,7 +110,7 @@ const Dashboard = () => {
   };
 
   return (
-    <UserContextProvider userId="user-123"> {/* In real app, get from auth */}
+    <UserContextProvider userId="user-123">
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-slate-50">
           <DashboardSidebar 

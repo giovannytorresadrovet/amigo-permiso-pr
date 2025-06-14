@@ -1,4 +1,4 @@
-import { Shield, LayoutDashboard, FileText, Upload, User, Settings, LogOut, Building, Briefcase, Brain, Globe, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { Shield, LayoutDashboard, FileText, Upload, User, Settings, LogOut, Building, Briefcase, Brain, Globe, ShieldCheck, AlertTriangle, Package, Store } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,

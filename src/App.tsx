@@ -9,6 +9,7 @@ import { SecurityProvider } from "@/components/SecurityProvider";
 import { CloudflareProvider } from "@/components/CloudflareProvider";
 import { AuthProvider } from "@/lib/auth0";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { useModuleSystem } from "@/hooks/useModuleSystem";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -18,6 +19,25 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const AppContent = () => {
+  // Initialize the module system
+  useModuleSystem();
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 const App = () => (
   <ErrorBoundary>
@@ -29,18 +49,7 @@ const App = () => (
               <TooltipProvider>
                 <Toaster />
                 <Sonner />
-                <BrowserRouter>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </BrowserRouter>
+                <AppContent />
               </TooltipProvider>
             </NotificationProvider>
           </CloudflareProvider>
