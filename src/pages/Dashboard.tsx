@@ -19,6 +19,7 @@ import { useNotificationEffects } from '@/hooks/useNotificationEffects';
 import { SecureGerryAIAssistant } from '@/components/ai/SecureGerryAIAssistant';
 import { UserContextProvider } from '@/contexts/UserContextProvider';
 import { UserManagementProvider } from '@/contexts/UserManagement';
+import { ModuleContextProvider } from '@/contexts/ModuleContext';
 
 const Dashboard = () => {
   const [currentView, setCurrentView] = useState('overview');
@@ -130,34 +131,36 @@ const Dashboard = () => {
       createdAt: new Date('2024-01-01')
     }}>
       <UserContextProvider userId="user-123">
-        <SidebarProvider>
-          <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-slate-50">
-            <DashboardSidebar 
-              currentView={currentView} 
-              onViewChange={setCurrentView}
-              language={language}
-              onLanguageChange={setLanguage}
-            />
-            <div className="flex-1 flex flex-col">
-              <DashboardHeader />
-              <main className="flex-1 p-4 sm:p-6 bg-gradient-to-br from-slate-50/50 to-transparent">
-                <div className="max-w-7xl mx-auto">
-                  {renderContent()}
-                </div>
-              </main>
+        <ModuleContextProvider>
+          <SidebarProvider>
+            <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-slate-50">
+              <DashboardSidebar 
+                currentView={currentView} 
+                onViewChange={setCurrentView}
+                language={language}
+                onLanguageChange={setLanguage}
+              />
+              <div className="flex-1 flex flex-col">
+                <DashboardHeader />
+                <main className="flex-1 p-4 sm:p-6 bg-gradient-to-br from-slate-50/50 to-transparent">
+                  <div className="max-w-7xl mx-auto">
+                    {renderContent()}
+                  </div>
+                </main>
+              </div>
+              <SecureGerryAIAssistant 
+                language={language}
+                businessContext={selectedBusinessId ? {
+                  businessId: selectedBusinessId,
+                  name: 'Current Business',
+                  type: 'Business',
+                  municipality: 'Puerto Rico',
+                  status: 'active'
+                } : undefined}
+              />
             </div>
-            <SecureGerryAIAssistant 
-              language={language}
-              businessContext={selectedBusinessId ? {
-                businessId: selectedBusinessId,
-                name: 'Current Business',
-                type: 'Business',
-                municipality: 'Puerto Rico',
-                status: 'active'
-              } : undefined}
-            />
-          </div>
-        </SidebarProvider>
+          </SidebarProvider>
+        </ModuleContextProvider>
       </UserContextProvider>
     </UserManagementProvider>
   );
