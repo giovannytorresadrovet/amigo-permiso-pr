@@ -22,6 +22,34 @@ export interface UserProfile {
   metadata: Record<string, any>;
 }
 
+export interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  verified: boolean;
+  identityVerified: boolean;
+  verificationStatus: string;
+  preferredLanguage: string;
+  createdAt: Date;
+}
+
+export interface VerificationSession {
+  id: string;
+  userId: string;
+  type: string;
+  status: string;
+  createdAt: Date;
+  expiresAt: Date;
+}
+
+export interface BusinessCreationAccess {
+  allowed: boolean;
+  reason?: string;
+  requiredVerifications?: string[];
+}
+
 export interface UserActivity {
   id: string;
   userId: string;
