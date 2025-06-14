@@ -1,0 +1,44 @@
+
+name = "permitpr"
+compatibility_date = "2024-06-14"
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]
+name = "permitpr"
+routes = [
+  { pattern = "permitpr.com/*", zone_name = "permitpr.com" },
+  { pattern = "www.permitpr.com/*", zone_name = "permitpr.com" }
+]
+
+[env.staging]
+name = "permitpr-staging"
+routes = [
+  { pattern = "staging.permitpr.com/*", zone_name = "permitpr.com" }
+]
+
+# Build configuration
+[build]
+command = "npm run build"
+cwd = "."
+watch_dir = "src"
+
+# Functions configuration
+[[functions]]
+pattern = "/api/*"
+compatibility_date = "2024-06-14"
+compatibility_flags = ["nodejs_compat"]
+
+# Analytics configuration
+[analytics]
+enabled = true
+
+# KV Namespaces for caching
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+preview_id = "your-preview-kv-namespace-id"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+APP_NAME = "PermitPR"
