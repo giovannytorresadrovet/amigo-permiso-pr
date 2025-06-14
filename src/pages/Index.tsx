@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { EnhancedBusinessWizard } from '@/components/EnhancedBusinessWizard';
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
-import { AppHeader } from '@/components/AppHeader';
+import { AppHeader } from '@/components/app/AppHeader';
 import { HeroSection } from '@/components/HeroSection';
 import { TrustMetrics } from '@/components/TrustMetrics';
 import { FeatureCards } from '@/components/FeatureCards';
