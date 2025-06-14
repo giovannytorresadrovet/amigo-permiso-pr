@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { EnhancedBusinessWizard } from '@/components/EnhancedBusinessWizard';
 import { DocumentUploadArea } from '@/components/DocumentUploadArea';
 import { PermitDiscoveryAI } from '@/components/PermitDiscoveryAI';
-import { AppHeader } from '@/components/app/AppHeader';
+import { LandingHeader } from '@/components/app/LandingHeader';
 import { HeroSection } from '@/components/HeroSection';
 import { TrustMetrics } from '@/components/TrustMetrics';
 import { FeatureCards } from '@/components/FeatureCards';
@@ -98,7 +98,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="flex justify-between items-center p-4">
-        <AppHeader currentLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} />
+        <LandingHeader currentLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} />
         <div className="flex items-center gap-4">
           <NotificationBell />
         </div>
