@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { PermisoUnicoApplication, DocumentType, PermisoUnicoDocument } from '@/types/permisoUnico';
-import { REQUIRED_DOCUMENTS } from './documents/DocumentRequirements';
-import { DocumentProgressBar } from './documents/DocumentProgressBar';
-import { DocumentUploadCard } from './documents/DocumentUploadCard';
+import { DocumentsHeader } from './documents/DocumentsHeader';
+import { DocumentsStats } from './documents/DocumentsStats';
+import { DocumentsGrid } from './documents/DocumentsGrid';
 import { DocumentHelpSection } from './documents/DocumentHelpSection';
 
 interface PermisoUnicoDocumentsProps {
@@ -14,79 +14,71 @@ interface PermisoUnicoDocumentsProps {
   language: 'es' | 'en';
 }
 
-export const PermisoUnicoDocuments = ({ application, onApplicationUpdate, language }: PermisoUnicoDocumentsProps) => {
-  const [uploadingDocument, setUploadingDocument] = useState<DocumentType | null>(null);
+export const PermisoUnicoDocuments = ({ 
+  application, 
+  onApplicationUpdate, 
+  language 
+}: PermisoUnicoDocumentsProps) => {
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const documents = application?.documents || [];
 
-  const handleFileUpload = async (file: File, metadata: any, documentType: DocumentType) => {
-    setUploadingDocument(documentType);
+  const handleDocumentUpload = async (type: DocumentType, file: File) => {
+    if (!application) return;
+
+    setIsUploading(true);
     
     try {
-      // Simulate file upload and processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Simulate file upload
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       const newDocument: PermisoUnicoDocument = {
         id: crypto.randomUUID(),
-        type: documentType,
-        name: REQUIRED_DOCUMENTS.find(d => d.type === documentType)?.name || 'Documento',
-        fileName: metadata.sanitizedName,
+        type,
+        name: file.name,
+        fileName: file.name,
         uploadedAt: new Date(),
         status: 'uploaded',
-        required: REQUIRED_DOCUMENTS.find(d => d.type === documentType)?.required || false,
-        description: REQUIRED_DOCUMENTS.find(d => d.type === documentType)?.description || '',
+        required: true,
+        description: `Documento subido: ${file.name}`,
         fileUrl: URL.createObjectURL(file)
       };
 
-      if (application) {
-        const updatedApplication = {
-          ...application,
-          documents: [...application.documents.filter(d => d.type !== documentType), newDocument],
-          lastUpdated: new Date()
-        };
-        onApplicationUpdate(updatedApplication);
-      }
+      const updatedDocuments = [
+        ...documents.filter(doc => doc.type !== type),
+        newDocument
+      ];
+
+      const updatedApplication = {
+        ...application,
+        documents: updatedDocuments,
+        lastUpdated: new Date()
+      };
+
+      onApplicationUpdate(updatedApplication);
     } catch (error) {
       console.error('Error uploading document:', error);
     } finally {
-      setUploadingDocument(null);
+      setIsUploading(false);
     }
-  };
-
-  const getDocumentStatus = (documentType: DocumentType) => {
-    return application?.documents.find(d => d.type === documentType);
   };
 
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="w-5 h-5" />
-            Documentos Requeridos
-          </CardTitle>
-          <CardDescription>
-            Suba los documentos necesarios para su solicitud de Permiso Único
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <DocumentProgressBar application={application} />
-
-          <div className="grid gap-6">
-            {REQUIRED_DOCUMENTS.map((docReq) => {
-              const existingDoc = getDocumentStatus(docReq.type);
-              const isUploading = uploadingDocument === docReq.type;
-              
-              return (
-                <DocumentUploadCard
-                  key={docReq.type}
-                  docReq={docReq}
-                  existingDoc={existingDoc}
-                  isUploading={isUploading}
-                  onFileUpload={handleFileUpload}
-                />
-              );
-            })}
-          </div>
-
+        <DocumentsHeader />
+        <CardContent className="space-y-6">
+          <DocumentsStats documents={documents} />
+          
+          <Separator />
+          
+          <DocumentsGrid 
+            documents={documents}
+            onDocumentUpload={handleDocumentUpload}
+          />
+          
+          <Separator />
+          
           <DocumentHelpSection />
         </CardContent>
       </Card>
