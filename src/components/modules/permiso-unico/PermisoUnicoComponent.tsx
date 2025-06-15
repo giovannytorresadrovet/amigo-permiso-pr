@@ -4,13 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { FileText, Clock, CheckCircle, AlertCircle, Bell, Shield, Settings } from 'lucide-react';
 import { PermisoUnicoApplication } from '@/types/permisoUnico';
 import { PermisoUnicoOverview } from './PermisoUnicoOverview';
 import { PermisoUnicoApplicationForm } from './PermisoUnicoApplicationForm';
 import { PermisoUnicoDocuments } from './PermisoUnicoDocuments';
 import { PermisoUnicoInspection } from './PermisoUnicoInspection';
 import { PermisoUnicoPayment } from './PermisoUnicoPayment';
+import { PermisoUnicoNotifications } from './notifications/PermisoUnicoNotifications';
+import { PermisoUnicoStatusTracker } from './status/PermisoUnicoStatusTracker';
+import { PermisoUnicoCompliance } from './compliance/PermisoUnicoCompliance';
+import { PermisoUnicoAdmin } from './admin/PermisoUnicoAdmin';
 
 interface PermisoUnicoComponentProps {
   businessId?: string;
@@ -49,7 +53,7 @@ export const PermisoUnicoComponent = ({ businessId, language = 'es' }: PermisoUn
               <div>
                 <CardTitle className="text-2xl">Permiso Único de Operación</CardTitle>
                 <CardDescription>
-                  Permiso único para establecimientos comerciales en Puerto Rico
+                  Sistema integral para permisos comerciales en Puerto Rico
                 </CardDescription>
               </div>
             </div>
@@ -59,7 +63,7 @@ export const PermisoUnicoComponent = ({ businessId, language = 'es' }: PermisoUn
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4" />
             Resumen
@@ -79,6 +83,18 @@ export const PermisoUnicoComponent = ({ businessId, language = 'es' }: PermisoUn
           <TabsTrigger value="payment" className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4" />
             Pago
+          </TabsTrigger>
+          <TabsTrigger value="notifications" className="flex items-center gap-2">
+            <Bell className="w-4 h-4" />
+            Notificaciones
+          </TabsTrigger>
+          <TabsTrigger value="compliance" className="flex items-center gap-2">
+            <Shield className="w-4 h-4" />
+            Cumplimiento
+          </TabsTrigger>
+          <TabsTrigger value="admin" className="flex items-center gap-2">
+            <Settings className="w-4 h-4" />
+            Admin
           </TabsTrigger>
         </TabsList>
 
@@ -120,6 +136,35 @@ export const PermisoUnicoComponent = ({ businessId, language = 'es' }: PermisoUn
             <PermisoUnicoPayment 
               application={application}
               onApplicationUpdate={setApplication}
+              language={language}
+            />
+          </TabsContent>
+
+          <TabsContent value="notifications">
+            <PermisoUnicoNotifications 
+              application={application}
+              language={language}
+            />
+          </TabsContent>
+
+          <TabsContent value="compliance">
+            <PermisoUnicoCompliance 
+              application={application}
+              language={language}
+            />
+          </TabsContent>
+
+          <TabsContent value="admin">
+            <PermisoUnicoAdmin 
+              application={application}
+              onApplicationUpdate={setApplication}
+              language={language}
+            />
+          </TabsContent>
+
+          <TabsContent value="status">
+            <PermisoUnicoStatusTracker 
+              application={application}
               language={language}
             />
           </TabsContent>
