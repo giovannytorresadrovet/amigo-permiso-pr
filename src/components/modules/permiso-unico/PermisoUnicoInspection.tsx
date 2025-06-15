@@ -1,13 +1,9 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import type { PermisoUnicoApplication, PermisoUnicoInspection as PermisoUnicoInspectionType } from '@/types/permisoUnico';
-import { InspectionStatus } from './inspection/InspectionStatus';
-import { InspectionChecklist } from './inspection/InspectionChecklist';
-import { InspectionResults } from './inspection/InspectionResults';
-import { InspectionScheduler, INSPECTION_CHECKLIST } from './inspection/InspectionScheduler';
-import { InspectionInfo } from './inspection/InspectionInfo';
+import { InspectionHeader } from './inspection/InspectionHeader';
+import { InspectionContent } from './inspection/InspectionContent';
+import { INSPECTION_CHECKLIST } from './inspection/InspectionScheduler';
 
 interface PermisoUnicoInspectionProps {
   application: PermisoUnicoApplication | null;
@@ -54,36 +50,13 @@ export const PermisoUnicoInspection = ({ application, onApplicationUpdate, langu
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CalendarIcon className="w-5 h-5" />
-            Inspección de Establecimiento
-          </CardTitle>
-          <CardDescription>
-            Programación y seguimiento de la inspección requerida para el Permiso Único
-          </CardDescription>
-        </CardHeader>
+        <InspectionHeader />
         <CardContent>
-          {currentInspection ? (
-            <div className="space-y-6">
-              <InspectionStatus 
-                inspection={currentInspection}
-                businessAddress={application?.businessInfo.address || ''}
-              />
-
-              <InspectionChecklist checklist={currentInspection.checklist} />
-
-              <InspectionResults inspection={currentInspection} />
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <InspectionScheduler onScheduleInspection={handleScheduleInspection} />
-
-              <Separator />
-
-              <InspectionInfo />
-            </div>
-          )}
+          <InspectionContent
+            currentInspection={currentInspection}
+            businessAddress={application?.businessInfo.address || ''}
+            onScheduleInspection={handleScheduleInspection}
+          />
         </CardContent>
       </Card>
     </div>
