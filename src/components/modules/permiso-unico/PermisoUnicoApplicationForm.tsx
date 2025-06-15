@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { PermisoUnicoApplication, PermisoUnicoBusinessInfo } from '@/types/permisoUnico';
+import { PermisoUnicoApplication, PermisoUnicoBusinessInfo, OperatingHours } from '@/types/permisoUnico';
 import { PermisoUnicoBusinessLogic } from '@/services/modules/permisoUnicoBusinessLogic';
 import { FormHeader } from './application-form/FormHeader';
 import { FormStatusIndicator } from './application-form/FormStatusIndicator';
@@ -61,8 +61,21 @@ export const PermisoUnicoApplicationForm = ({
     }
   }, [application]);
 
-  const updateFormData = (updates: Partial<PermisoUnicoBusinessInfo>) => {
-    setFormData(prev => ({ ...prev, ...updates }));
+  const handleInputChange = (field: keyof PermisoUnicoBusinessInfo, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleOperatingHoursChange = (day: keyof OperatingHours, field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      operatingHours: {
+        ...prev.operatingHours,
+        [day]: {
+          ...prev.operatingHours[day],
+          [field]: value
+        }
+      }
+    }));
   };
 
   const handleSubmit = () => {
@@ -112,28 +125,28 @@ export const PermisoUnicoApplicationForm = ({
 
         <BusinessInfoSection 
           formData={formData}
-          onUpdate={updateFormData}
+          handleInputChange={handleInputChange}
         />
 
         <Separator />
 
         <LocationSection 
           formData={formData}
-          onUpdate={updateFormData}
+          handleInputChange={handleInputChange}
         />
 
         <Separator />
 
         <OperationalInfoSection 
           formData={formData}
-          onUpdate={updateFormData}
+          handleInputChange={handleInputChange}
         />
 
         <Separator />
 
         <OperatingHoursSection 
-          formData={formData}
-          onUpdate={updateFormData}
+          operatingHours={formData.operatingHours}
+          handleOperatingHoursChange={handleOperatingHoursChange}
         />
 
         <Separator />
