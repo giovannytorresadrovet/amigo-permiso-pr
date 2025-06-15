@@ -1,22 +1,14 @@
 
 import { Progress } from '@/components/ui/progress';
-import { PermisoUnicoApplication } from '@/types/permisoUnico';
-import { REQUIRED_DOCUMENTS } from './DocumentRequirements';
 
 interface DocumentProgressBarProps {
-  application: PermisoUnicoApplication | null;
+  uploaded: number;
+  total: number;
+  approved: number;
 }
 
-export const DocumentProgressBar = ({ application }: DocumentProgressBarProps) => {
-  const calculateProgress = () => {
-    const requiredDocs = REQUIRED_DOCUMENTS.filter(d => d.required);
-    const uploadedRequiredDocs = requiredDocs.filter(doc => 
-      application?.documents.some(appDoc => appDoc.type === doc.type && appDoc.status !== 'rejected')
-    );
-    return Math.round((uploadedRequiredDocs.length / requiredDocs.length) * 100);
-  };
-
-  const progress = calculateProgress();
+export const DocumentProgressBar = ({ uploaded, total, approved }: DocumentProgressBarProps) => {
+  const progress = Math.round((uploaded / total) * 100);
 
   return (
     <div className="mb-6">
